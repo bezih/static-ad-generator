@@ -33,17 +33,18 @@ export async function POST(request: NextRequest) {
         else if (imgUrl.startsWith("/")) imgUrl = baseUrl + imgUrl;
         else if (!imgUrl.startsWith("http")) imgUrl = baseUrl + "/" + imgUrl;
 
-        // Filter: skip tiny icons, SVGs, tracking pixels
-        if (
-          !imgUrl.includes("favicon") &&
-          !imgUrl.includes("icon") &&
-          !imgUrl.includes("logo") &&
-          !imgUrl.includes("pixel") &&
-          !imgUrl.includes("tracking") &&
-          !imgUrl.endsWith(".svg") &&
-          !imgUrl.includes("1x1") &&
-          !imgUrl.includes("data:image")
-        ) {
+        // Filter: only keep accessible image formats, skip junk
+        const lower = imgUrl.toLowerCase();
+        const isSupported = lower.endsWith(".png") || lower.endsWith(".jpg") || lower.endsWith(".jpeg") ||
+          lower.includes(".png?") || lower.includes(".jpg?") || lower.includes(".jpeg?") ||
+          (lower.includes("/product") || lower.includes("/image") || lower.includes("/photo") || lower.includes("/upload"));
+        const isJunk = lower.includes("favicon") || lower.includes("icon") || lower.includes("logo") ||
+          lower.includes("pixel") || lower.includes("tracking") || lower.endsWith(".svg") ||
+          lower.endsWith(".avif") || lower.endsWith(".webp") || lower.endsWith(".gif") ||
+          lower.includes("1x1") || lower.includes("data:image") || lower.includes("spacer") ||
+          lower.includes("badge") || lower.includes("payment") || lower.includes("flag");
+
+        if (isSupported && !isJunk) {
           allImages.push(imgUrl);
         }
       }
