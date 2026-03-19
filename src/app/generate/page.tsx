@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Nav } from "@/components/Nav";
@@ -89,6 +89,68 @@ export default function GeneratePage() {
   const [error, setError] = useState("");
   const [scrapeStatus, setScrapeStatus] = useState("");
   const abortRef = useRef(false);
+  const [savedCampaigns, setSavedCampaigns] = useState<
+    { brandName: string; date: string; ads: GeneratedAd[] }[]
+  >([]);
+
+  // Load saved campaigns from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("adforge_campaigns");
+      if (saved) {
+        const campaigns = JSON.parse(saved);
+        setSavedCampaigns(campaigns);
+      }
+    } catch {}
+  }, []);
+
+  // Save campaign when generation completes
+  const saveCampaign = useCallback((name: string, ads: GeneratedAd[]) => {
+    try {
+      const saved = localStorage.getItem("adforge_campaigns");
+      const campaigns = saved ? JSON.parse(saved) : [];
+      const campaign = {
+        brandName: name,
+        date: new Date().toISOString(),
+        ads,
+      };
+      // Replace if same brand, otherwise add
+      const idx = campaigns.findIndex((c: { brandName: string }) => c.brandName === name);
+      if (idx >= 0) campaigns[idx] = campaign;
+      else campaigns.unshift(campaign);
+      // Keep last 10 campaigns
+      const trimmed = campaigns.slice(0, 10);
+      localStorage.setItem("adforge_campaigns", JSON.stringify(trimmed));
+      setSavedCampaigns(trimmed);
+    } catch {}
+  }, []);
+
+  // Load a saved campaign
+  const loadCampaign = (campaign: { brandName: string; ads: GeneratedAd[] }) => {
+    setBrandName(campaign.brandName);
+    setGenerated(campaign.ads);
+    setStep("done");
+  };
+
+  // Download all generated images as individual files
+  const downloadAll = async (ads: GeneratedAd[]) => {
+    for (const ad of ads) {
+      try {
+        const res = await fetch(ad.imageUrl);
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${ad.templateName}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        // Small delay between downloads so browser doesn't block them
+        await new Promise((r) => setTimeout(r, 300));
+      } catch {}
+    }
+  };
 
   // --- Step 1: Scrape website + build brand DNA ---
   const startScrape = async () => {
@@ -250,6 +312,11 @@ export default function GeneratePage() {
       }
     }
     setStep("done");
+    // Save to localStorage
+    setGenerated((current) => {
+      saveCampaign(brandName, current);
+      return current;
+    });
   };
 
   const toggleTemplate = (id: number) => {
@@ -338,6 +405,30 @@ export default function GeneratePage() {
                     Deploy Research Agents
                   </button>
                 </div>
+
+                {/* Saved Campaigns */}
+                {savedCampaigns.length > 0 && (
+                  <div className="mt-10 max-w-2xl">
+                    <h3 className="text-sm text-silver font-medium mb-4 tracking-wider uppercase">Previous Campaigns</h3>
+                    <div className="space-y-2">
+                      {savedCampaigns.map((c, i) => (
+                        <button
+                          key={i}
+                          onClick={() => loadCampaign(c)}
+                          className="w-full flex items-center justify-between p-4 rounded-xl glass hover:border-gold/20 transition-all text-left"
+                        >
+                          <div>
+                            <p className="text-ivory font-medium">{c.brandName}</p>
+                            <p className="text-xs text-silver">{c.ads.length} ads &middot; {new Date(c.date).toLocaleDateString()}</p>
+                          </div>
+                          <svg className="w-4 h-4 text-silver" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                          </svg>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </motion.div>
             )}
 
@@ -544,9 +635,28 @@ export default function GeneratePage() {
                 )}
 
                 {step === "done" && (
-                  <div className="mb-10">
-                    <h1 className="font-display text-4xl text-ivory mb-2">Your campaign is ready.</h1>
-                    <p className="text-silver">{generated.length} ads generated for <span className="text-gold">{brandName}</span></p>
+                  <div className="mb-10 flex items-end justify-between">
+                    <div>
+                      <h1 className="font-display text-4xl text-ivory mb-2">Your campaign is ready.</h1>
+                      <p className="text-silver">{generated.length} ads generated for <span className="text-gold">{brandName}</span></p>
+                    </div>
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => downloadAll(generated)}
+                        className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-gold to-gold-dark text-obsidian font-semibold text-sm hover:shadow-[0_0_30px_-8px_rgba(201,168,76,0.4)] transition-all"
+                      >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Download All
+                      </button>
+                      <button
+                        onClick={() => { setStep("input"); setGenerated([]); setBrandName(""); setBrandUrl(""); setProduct(""); setAgents(AGENTS.map((a) => ({ ...a }))); }}
+                        className="px-6 py-3 rounded-xl text-sm font-medium text-silver border border-ivory/10 hover:bg-ivory/5 transition-colors"
+                      >
+                        New Campaign
+                      </button>
+                    </div>
                   </div>
                 )}
 
