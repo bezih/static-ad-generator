@@ -1,23 +1,21 @@
 import type { Metadata } from "next";
-import { DM_Serif_Display, Outfit } from "next/font/google";
+import { Playfair_Display, DM_Sans } from "next/font/google";
 import "./globals.css";
-import { Nav } from "@/components/Nav";
 
-const dmSerif = DM_Serif_Display({
-  weight: "400",
-  variable: "--font-dm-serif",
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
   subsets: ["latin"],
 });
 
-const outfit = Outfit({
-  variable: "--font-outfit",
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "Static Ad Generator — Cherry Ruff Pharmacy",
+  title: "AdForge — AI-Powered Static Ad Generator",
   description:
-    "AI-powered static ad generation for independent pharmacies. Generate high-converting ad images at scale.",
+    "Generate high-converting static ads for any brand. Powered by multi-agent research and AI image generation.",
 };
 
 export default function RootLayout({
@@ -26,13 +24,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${dmSerif.variable} ${outfit.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col font-body">
-        <Nav />
-        <main className="flex-1">{children}</main>
+    <html lang="en" className={`${playfair.variable} ${dmSans.variable} h-full`}>
+      <body className="min-h-full font-body antialiased noise">
+        {children}
       </body>
     </html>
   );
