@@ -5,7 +5,7 @@ const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 export async function POST(request: NextRequest) {
   try {
-    const { brandDna, agentFindings } = await request.json();
+    const { brandDna, agentFindings, hasProductImages } = await request.json();
 
     if (!brandDna) {
       return NextResponse.json({ error: "Brand DNA required" }, { status: 400 });
@@ -35,6 +35,13 @@ RULES:
 - NEVER include phone numbers, addresses, or URLs in prompts
 - End every prompt with "Do not include any phone numbers, addresses, or URLs."
 - Cover these categories: conversion/CTA (8), competitive/comparison (8), emotional/bold (8), social proof (8), differentiators (8)
+${hasProductImages ? `
+CRITICAL — PRODUCT IMAGE REFERENCE:
+- Reference product images will be provided alongside each prompt to the image generation model
+- Every prompt MUST instruct the model to render the product EXACTLY as it appears in the reference image — same shape, same colors, same packaging, same labels, same proportions
+- Include phrases like: "The product must match the reference image exactly — same packaging, colors, shape, and labels. Preserve every visual detail of the actual product."
+- Do NOT describe a generic or imagined version of the product. The reference image IS the product.
+- The product should be the hero of most compositions — clearly visible, well-lit, and faithfully reproduced.` : ""}
 
 TEMPLATE TYPES TO COVER:
 1-4: Headline hero, offer/promotion, how-it-works, bold claim

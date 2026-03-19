@@ -7,7 +7,7 @@ fal.config({
 
 export async function POST(request: NextRequest) {
   try {
-    const { prompt, aspectRatio = "4:5" } = await request.json();
+    const { prompt, aspectRatio = "4:5", imageUrls } = await request.json();
 
     if (!prompt) {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
@@ -20,16 +20,33 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const result = await fal.subscribe("fal-ai/nano-banana-2", {
-      input: {
-        prompt,
-        num_images: 1,
-        aspect_ratio: aspectRatio,
-        output_format: "png",
-        safety_tolerance: "4",
-        resolution: "1K",
-      },
-    });
+    let result;
+
+    if (imageUrls && imageUrls.length > 0) {
+      // Edit mode — use reference product images so the AI matches the real product
+      result = await fal.subscribe("fal-ai/nano-banana-2/edit", {
+        input: {
+          prompt,
+          image_urls: imageUrls,
+          num_images: 1,
+          aspect_ratio: aspectRatio,
+          output_format: "png",
+          safety_tolerance: "4",
+        },
+      });
+    } else {
+      // Text-to-image mode — no reference images
+      result = await fal.subscribe("fal-ai/nano-banana-2", {
+        input: {
+          prompt,
+          num_images: 1,
+          aspect_ratio: aspectRatio,
+          output_format: "png",
+          safety_tolerance: "4",
+          resolution: "1K",
+        },
+      });
+    }
 
     const data = result.data as { images?: { url: string }[] };
 

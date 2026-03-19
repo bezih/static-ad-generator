@@ -191,7 +191,7 @@ export default function GeneratePage() {
       const res = await fetch("/api/prompts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ brandDna: dna, agentFindings: findings }),
+        body: JSON.stringify({ brandDna: dna, agentFindings: findings, hasProductImages: productImages.length > 0 }),
       });
 
       const data = await res.json();
@@ -223,7 +223,10 @@ export default function GeneratePage() {
         const res = await fetch("/api/generate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt: template.prompt }),
+          body: JSON.stringify({
+            prompt: template.prompt,
+            imageUrls: productImages.length > 0 ? productImages.slice(0, 3) : undefined,
+          }),
         });
 
         const data = await res.json();
