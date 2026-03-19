@@ -1,0 +1,242 @@
+[
+  {
+    "id": 1,
+    "template_name": "how_it_works",
+    "prompt": "A how-it-works static ad for Cherry Ruff Pharmacy. Bold headline 'Switching Takes 60 Seconds. Heres How.' in cherry red #8B1A2B elegant serif font at top. Three numbered steps with simple icons: '1. Call us or just walk in' with phone icon, '2. Give us your pharmacy name — we do the rest' with clipboard icon, '3. Pick up same day or we deliver free' with delivery truck icon. Clean sans-serif body text in bark brown #2C1810. A smiling female pharmacist behind a cherry red counter at the bottom. Cream #FDF6F0 background. Warm, confident tone. Do not include any phone numbers, addresses, or URLs. Professional pharmacy ad design.",
+    "headline_text": "Switching Takes 60 Seconds. Here's How."
+  },
+  {
+    "id": 2,
+    "template_name": "stat_data_hero",
+    "prompt": "A statistic-driven static ad for Cherry Ruff Pharmacy. Massive number '5' centered in bold gold #C9A84C elegant serif font, with 'minutes' in smaller serif below it. Hard-hitting subtext 'Your last CVS wait was probably 45.' in clean sans-serif bark brown #2C1810 type. A pharmacist at a cherry red branded counter shown at bottom third. Cream #FDF6F0 background. Confident, data-driven feel. Do not include any phone numbers, addresses, or URLs. Professional pharmacy ad design.",
+    "headline_text": "5 minutes. Your last CVS wait was probably 45."
+  },
+  {
+    "id": 3,
+    "template_name": "myth_buster",
+    "prompt": "A myth-busting static ad for Cherry Ruff Pharmacy. Top section: 'MYTH:' label in gray, followed by struck-through gray text reading 'Switching pharmacies is a huge hassle. Id have to call my doctor, get new prescriptions, fill out paperwork...' in a cramped overwhelming font. Bottom section: 'REALITY:' label in cherry red #8B1A2B, followed by bold cherry red text reading 'You give us one phone call. We handle everything else. Done.' in clean elegant serif. A confident pharmacist with arms crossed shown small at bottom. Cream #FDF6F0 background. Do not include any phone numbers, addresses, or URLs. Professional pharmacy advertising design.",
+    "headline_text": "You give us one phone call. We handle everything else."
+  },
+  {
+    "id": 4,
+    "template_name": "negative_marketing",
+    "prompt": "A negative marketing static ad for Cherry Ruff Pharmacy. Top: '45-Minute Waits' in bold dark serif font with a large red X strikethrough graphic slashed across it. Below: 'Walk into Cherry Ruff. Walk out with your meds. Five minutes.' in cherry red #8B1A2B elegant serif. Small supporting text 'Were not a chain. We dont act like one.' in bark brown #2C1810 sans-serif. A warm inviting independent pharmacy interior with a pharmacist handing a bag to a patient shown in the lower half. Cream #FDF6F0 background. Edgy, disruptive advertising style. Do not include any phone numbers, addresses, or URLs. Professional layout.",
+    "headline_text": "Walk into Cherry Ruff. Walk out with your meds. Five minutes."
+  },
+  {
+    "id": 5,
+    "template_name": "problem_solution",
+    "prompt": "A problem-solution static ad for Cherry Ruff Pharmacy. Top half in muted gray desaturated tones: the problem. Visual of a frustrated woman on hold with a phone pressed to her ear, eyes closed. Text: 'On hold for 20 minutes. Prescription not ready. Again.' in gray sans-serif. Bottom half in warm vibrant cherry red #8B1A2B tones: the solution. Visual of a smiling pharmacist handing a bag across a counter. Text: 'At Cherry Ruff, we pick up on the first ring. Your meds are ready when you walk in.' in cream #FDF6F0 elegant serif. Sharp visual divider between halves. Do not include any phone numbers, addresses, or URLs. Professional ad layout.",
+    "headline_text": "We pick up on the first ring. Your meds are ready when you walk in."
+  },
+  {
+    "id": 6,
+    "template_name": "bold_claim",
+    "prompt": "A bold-claim static ad for Cherry Ruff Pharmacy. Single powerful statement 'Your Chain Pharmacy Doesnt Know Your Name. We Will By Tomorrow.' in oversized elegant serif cherry red #8B1A2B font filling most of the frame, with the second sentence slightly smaller. Small cherry logo icon in bottom right corner. Cream #FDF6F0 background. Confident, provocative tone. Minimal design. No imagery, purely typographic. Do not include any phone numbers, addresses, or URLs. Professional pharmacy advertising.",
+    "headline_text": "Your Chain Pharmacy Doesn't Know Your Name. We Will By Tomorrow."
+  },
+  {
+    "id": 7,
+    "template_name": "us_vs_them",
+    "prompt": "A comparison-style static ad for Cherry Ruff Pharmacy. Headline 'Choose Personal Care Over the Crowd' in elegant serif cherry red #8B1A2B at top. Split layout: left side labeled 'Chain Pharmacy' showing a crowded impersonal pharmacy with a long line of frustrated customers waiting at a generic counter, rendered in cold desaturated gray blue tones. Right side labeled 'Cherry Ruff' showing a pharmacist greeting a patient warmly at a cherry red branded counter with no line, rendered in warm vibrant cherry red and cream tones. No text other than labels and headline. Clean cream #FDF6F0 background border. Do not include any phone numbers, addresses, or URLs. Professional advertising layout.",
+    "headline_text": "Choose Personal Care Over the Crowd"
+  },
+  {
+    "id": 8,
+    "template_name": "urgency_cvs",
+    "prompt": "An urgency-driven static ad for Cherry Ruff Pharmacy. Bold headline 'Still Standing in Line at CVS?' in light cherry #B8344A elegant serif font at top. Below: 'Your prescription could already be filled at Cherry Ruff.' in bark brown #2C1810 sans-serif. Visual of an empty welcoming pharmacy counter with cherry red branding — no line, no wait. A 'Switch Today' button graphic in cherry red #8B1A2B at bottom. Cream #FDF6F0 background. Energetic, conversion-focused. Do not include any phone numbers, addresses, or URLs. Professional pharmacy advertising.",
+    "headline_text": "Still Standing in Line at CVS?"
+  },
+  {
+    "id": 9,
+    "template_name": "ugc_social_style",
+    "prompt": "A UGC-style static ad for Cherry Ruff Pharmacy. Designed to look like a genuine Instagram story screenshot. A photo of a front porch of a modest suburban Michigan home with a prescription delivery bag sitting on the doormat. Casual overlay text 'switched from walgreens last week. they DELIVER for FREE??? why did i wait so long' in white casual handwritten font with a subtle drop shadow. Small location tag 'Garden City, MI' in corner. Slightly imperfect phone-camera aesthetic with natural daylight. No brand logos prominently visible. Organic authentic feel. Do not include any phone numbers, addresses, or URLs.",
+    "headline_text": "switched from walgreens last week. they DELIVER for FREE??? why did i wait so long"
+  },
+  {
+    "id": 10,
+    "template_name": "complete_care",
+    "prompt": "A complete-care static ad for Cherry Ruff Pharmacy. Headline 'See the Doctor. Get Your Meds. Same Building. Same Visit.' in elegant serif gold #C9A84C font on a cherry red #8B1A2B background. Visual showing a modern medical clinic hallway with a pharmacy counter visible just steps away emphasizing physical proximity. Small text 'Located inside Acadian Clinic — your prescription is ready before you reach the parking lot' in cream #FDF6F0 sans-serif. Warm lighting. Do not include any phone numbers, addresses, or URLs. Professional healthcare advertising.",
+    "headline_text": "See the Doctor. Get Your Meds. Same Building. Same Visit."
+  },
+  {
+    "id": 11,
+    "template_name": "free_delivery_guarantee",
+    "prompt": "A guarantee-focused static ad for Cherry Ruff Pharmacy. Large bold seal badge graphic with 'FREE Delivery' in cherry red #8B1A2B inside it. Below the seal, stacked text: 'No minimum order. No signup fee. No delivery charge. Ever.' in clean sans-serif bark brown #2C1810. Supporting text 'Garden City, Westland, Inkster, Wayne and Dearborn Heights' in smaller type showing the coverage area. Visual of a prescription bag on a suburban doorstep with a welcome mat. Cream #FDF6F0 background. Trustworthy, straightforward. Do not include any phone numbers, addresses, or URLs. Professional pharmacy ad.",
+    "headline_text": "No minimum. No signup fee. No delivery charge. Ever."
+  },
+  {
+    "id": 12,
+    "template_name": "before_after",
+    "prompt": "A before-and-after style static ad for Cherry Ruff Pharmacy. Split layout. Left side labeled 'BEFORE' in gray: a tired person sitting in a plastic chair in a sterile chain pharmacy waiting area staring at their phone, clearly bored and frustrated, desaturated cold tones. Right side labeled 'AFTER' in cherry red: the same person relaxed on their couch at home, prescription bag on the coffee table, watching TV with their feet up, warm vibrant cherry red and cream tones. Headline 'You Used to Wait 45 Minutes. Now You Dont Even Leave the Couch.' in elegant serif. Cream border. Do not include any phone numbers, addresses, or URLs. Professional advertising layout.",
+    "headline_text": "You Used to Wait 45 Minutes. Now You Don't Even Leave the Couch."
+  },
+  {
+    "id": 13,
+    "template_name": "experience_comparison",
+    "prompt": "An experience comparison static ad for Cherry Ruff Pharmacy. Two columns text-only layout. Left column header: 'Your Current Pharmacy' in gray serif. Below a list in small gray text: '45-minute average wait', 'Prescriptions lost or not ready', 'Staff doesnt know your name', 'On hold for 20 minutes', 'Drive-thru only option', 'Understaffed and overwhelmed'. Right column header: 'Cherry Ruff' in bold cherry red #8B1A2B serif. Below a list in cherry red: '5-minute fills', 'Your meds ready when promised', 'Pharmacist knows you personally', 'We answer the phone', 'Free home delivery', 'Pharmacists with time to talk'. Cream #FDF6F0 background. Clean layout. No images. Do not include any phone numbers, addresses, or URLs. Professional pharmacy advertising.",
+    "headline_text": "Your Current Pharmacy vs. Cherry Ruff"
+  },
+  {
+    "id": 14,
+    "template_name": "customer_story",
+    "prompt": "A customer story static ad for Cherry Ruff Pharmacy. A cozy front porch of a modest brick ranch-style home typical of Garden City Michigan in autumn. A prescription delivery bag sitting on the doorstep. Overlaid text in elegant serif cherry red #8B1A2B: 'I spent 10 years going to CVS on Ford Road. Last month I called Cherry Ruff. They transferred everything in one phone call. Now my meds show up at my door. Im never going back.' Small attribution 'Garden City resident' in bark brown #2C1810 italic. Warm afternoon lighting. Authentic nostalgic feel. Do not include any phone numbers, addresses, or URLs. Professional ad.",
+    "headline_text": "I spent 10 years at CVS on Ford Road. Now my meds show up at my door."
+  },
+  {
+    "id": 15,
+    "template_name": "insurance_accepted",
+    "prompt": "An insurance-focused static ad for Cherry Ruff Pharmacy. Bold headline 'Yes, We Take Your Insurance.' in elegant serif cherry red #8B1A2B font. Below, large clear text listing: 'Express Scripts. Humana. Medicaid. And more every month.' in bark brown #2C1810 sans-serif. Supporting text 'Not sure if we take yours? Call us — well check in 30 seconds.' in smaller type. Cherry red #8B1A2B decorative border. Cream #FDF6F0 background. Warm reassuring tone. Cherry icon logo small at bottom. Do not include any phone numbers, addresses, or URLs. Professional pharmacy advertising.",
+    "headline_text": "Yes, We Take Your Insurance."
+  },
+  {
+    "id": 16,
+    "template_name": "we_answer_the_phone",
+    "prompt": "A static ad for Cherry Ruff Pharmacy. Bold headline 'A Real Person Answers Our Phone. On the First Ring.' in elegant serif cherry red #8B1A2B font filling the top half. Below, smaller text: 'No automated menus. No 20-minute hold. No robot voice. Just your pharmacist.' in bark brown #2C1810 sans-serif. Visual of a friendly pharmacist holding a phone receiver and smiling at bottom. Cream #FDF6F0 background. Warm, inviting tone. Do not include any phone numbers, addresses, or URLs. Professional pharmacy advertising.",
+    "headline_text": "A Real Person Answers Our Phone. On the First Ring."
+  },
+  {
+    "id": 17,
+    "template_name": "pharmacy_closed",
+    "prompt": "A static ad for Cherry Ruff Pharmacy addressing pharmacy closures. Bold headline 'Your Pharmacy Closed. We Didnt.' in elegant serif cherry red #8B1A2B font at top. Below: 'While chains are shutting doors across Michigan, Cherry Ruff is keeping ours open for Garden City and surrounding communities.' in bark brown #2C1810 sans-serif. Visual of a warmly lit independent pharmacy with its door open and lights on at dusk, looking welcoming against a darker background. Cream #FDF6F0 background. Reassuring, community-focused. Do not include any phone numbers, addresses, or URLs. Professional pharmacy advertising.",
+    "headline_text": "Your Pharmacy Closed. We Didn't."
+  },
+  {
+    "id": 18,
+    "template_name": "inertia_breaker",
+    "prompt": "A static ad for Cherry Ruff Pharmacy targeting inertia. Bold headline 'You Have Been Meaning to Switch Pharmacies for a Year. This is Your Sign.' in elegant serif cherry red #8B1A2B font filling the frame. Small supporting text below: 'One call. We transfer everything. Free delivery starts tomorrow.' in bark brown #2C1810 sans-serif. Minimal design, purely typographic with lots of white space. Small cherry icon at bottom. Cream #FDF6F0 background. Direct, personal tone. Do not include any phone numbers, addresses, or URLs. Professional pharmacy advertising.",
+    "headline_text": "You've Been Meaning to Switch Pharmacies for a Year. This is Your Sign."
+  },
+  {
+    "id": 19,
+    "template_name": "social_proof_5_stars",
+    "prompt": "A social proof static ad for Cherry Ruff Pharmacy. Five large gold #C9A84C stars prominent at top. Pull quote 'Best pharmacy experience I have ever had. They truly care about their patients.' in elegant serif italic font in bark brown #2C1810. Below the quote, text 'Rated 5.0 on Google by real Garden City patients' in cherry red #8B1A2B. Image of a warm pharmacy interior with cherry red branding at bottom. Cream #FDF6F0 background. Prestigious, credible advertising style. Do not include any phone numbers, addresses, or URLs. Professional layout.",
+    "headline_text": "Rated 5.0 by real Garden City patients."
+  },
+  {
+    "id": 20,
+    "template_name": "checklist",
+    "prompt": "A checklist-style static ad for Cherry Ruff Pharmacy. Headline 'The Cherry Ruff Difference' in elegant serif cherry red #8B1A2B at top. Cherry red checkmarks next to: 'Free delivery to your door', '5-minute prescription fills', 'Pharmacist who knows your name', 'We accept Medicaid and Humana', 'Located inside Acadian Clinic', 'A real person answers the phone'. Clean sans-serif typography in bark brown #2C1810. Cherry icon logo at bottom. Cream #FDF6F0 background. Satisfying, thorough, value-packed feel. Do not include any phone numbers, addresses, or URLs. Professional pharmacy ad layout.",
+    "headline_text": "The Cherry Ruff Difference"
+  },
+  {
+    "id": 21,
+    "template_name": "founder_story",
+    "prompt": "A founder-story static ad for Cherry Ruff Pharmacy. Text-heavy layout with quote: 'We opened Cherry Ruff because Garden City deserved better than 45-minute waits and pharmacists who dont remember your name. We built the pharmacy we wished existed.' in elegant serif cherry red #8B1A2B font. Warm authentic photography feel of a neighborhood pharmacy storefront. Cream #FDF6F0 background with subtle cherry red accents. Storytelling, human-centered advertising style. Do not include any phone numbers, addresses, or URLs. Professional ad.",
+    "headline_text": "We built the pharmacy we wished existed."
+  },
+  {
+    "id": 22,
+    "template_name": "lost_prescription",
+    "prompt": "A static ad for Cherry Ruff Pharmacy. Bold headline 'We Have Never Lost a Prescription.' in elegant serif cherry red #8B1A2B font at top. Below: 'Can your pharmacy say that?' in bark brown #2C1810 italic sans-serif. Visual of a pharmacist carefully labeling a prescription bag with focus and attention. Cream #FDF6F0 background. Confident, direct tone. Single-message focus. Do not include any phone numbers, addresses, or URLs. Professional pharmacy advertising.",
+    "headline_text": "We've Never Lost a Prescription. Can Your Pharmacy Say That?"
+  },
+  {
+    "id": 23,
+    "template_name": "tired_of_waiting",
+    "prompt": "A static ad for Cherry Ruff Pharmacy. Bold headline 'Tired of Waiting 45 Minutes for a Prescription That Was Supposed to Be Ready?' in elegant serif cherry red #8B1A2B font filling the top two-thirds. Below in smaller sans-serif bark brown #2C1810: 'At Cherry Ruff, ready means ready. Average fill time: 5 minutes.' Small cherry icon at bottom. Cream #FDF6F0 background. Emotionally direct. Do not include any phone numbers, addresses, or URLs. Professional pharmacy advertising.",
+    "headline_text": "Tired of Waiting 45 Minutes for a Prescription That Was Supposed to Be Ready?"
+  },
+  {
+    "id": 24,
+    "template_name": "medication_safety",
+    "prompt": "A static ad for Cherry Ruff Pharmacy focused on medication safety. Headline 'Your Pharmacist Reviews Every Medication You Take. Every Time.' in elegant serif cherry red #8B1A2B font. Supporting text: 'Drug interactions. Allergies. Dosage checks. We have time to do it right because we are not filling 500 scripts with 2 people.' in bark brown #2C1810 sans-serif. Visual of a pharmacist carefully reviewing medication labels with reading glasses. Cream #FDF6F0 background. Trustworthy, reassuring, clinical-yet-warm. Do not include any phone numbers, addresses, or URLs. Professional healthcare advertising.",
+    "headline_text": "Your Pharmacist Reviews Every Medication You Take. Every Time."
+  },
+  {
+    "id": 25,
+    "template_name": "same_pharmacist",
+    "prompt": "A static ad for Cherry Ruff Pharmacy. Headline 'Same Pharmacist. Every Visit. Imagine That.' in elegant serif cherry red #8B1A2B font at top. Supporting text: 'No more explaining your medications to a stranger every time you walk in.' in bark brown #2C1810 sans-serif. Visual of a pharmacist smiling warmly and greeting someone familiar across a cherry red counter. Cream #FDF6F0 background. Personal, warm tone. Do not include any phone numbers, addresses, or URLs. Professional pharmacy advertising.",
+    "headline_text": "Same Pharmacist. Every Visit. Imagine That."
+  },
+  {
+    "id": 26,
+    "template_name": "delivery_lifestyle",
+    "prompt": "A lifestyle static ad for Cherry Ruff Pharmacy. A delivery bag with cherry red branding sitting on a suburban doorstep next to a morning newspaper and a pair of house slippers. Natural morning light. Elegant serif headline 'Your Meds, Before Your Morning Coffee' in cherry red #8B1A2B overlaid at top. Suburban Michigan home setting. Warm, aspirational yet relatable. Do not include any phone numbers, addresses, or URLs. Professional advertising photography.",
+    "headline_text": "Your Meds, Before Your Morning Coffee"
+  },
+  {
+    "id": 27,
+    "template_name": "not_a_chain",
+    "prompt": "A typography-driven static ad for Cherry Ruff Pharmacy. Stacked text layout: 'NOT' in huge bold cherry red #8B1A2B, 'a chain pharmacy' in medium gray struck-through text, 'YOUR pharmacy' in huge bold cherry red #8B1A2B below. All in elegant serif on cream #FDF6F0 background. Small text 'Cherry Ruff Pharmacy — Garden City, MI' at bottom. Graphic poster-style design. Bold, modern. Do not include any phone numbers, addresses, or URLs. Professional pharmacy advertising.",
+    "headline_text": "NOT a chain pharmacy. YOUR pharmacy."
+  },
+  {
+    "id": 28,
+    "template_name": "auto_refill",
+    "prompt": "A static ad for Cherry Ruff Pharmacy about refills. Headline 'Never Run Out of Your Medication Again.' in elegant serif cherry red #8B1A2B font. Supporting text: 'We track your refills and call you before you run low. Then we deliver. Free.' in bark brown #2C1810 sans-serif. Visual of a calendar with refill dates circled in cherry red and a delivery truck icon. Cream #FDF6F0 background. Convenient, hassle-free feel. Do not include any phone numbers, addresses, or URLs. Professional pharmacy ad.",
+    "headline_text": "Never Run Out of Your Medication Again."
+  },
+  {
+    "id": 29,
+    "template_name": "side_by_side_experience",
+    "prompt": "A side-by-side experience static ad for Cherry Ruff Pharmacy. Left: 'Without Cherry Ruff' showing a tired person stuck in a chain pharmacy drive-thru line in the rain in desaturated gray tones. Right: 'With Cherry Ruff' showing the same person relaxed at home on their couch with a delivery bag on the porch in full vibrant cherry red #8B1A2B warm tones. Elegant serif labels. Dramatic contrast. Do not include any phone numbers, addresses, or URLs. Professional pharmacy advertising.",
+    "headline_text": "Without Cherry Ruff vs. With Cherry Ruff"
+  },
+  {
+    "id": 30,
+    "template_name": "one_call",
+    "prompt": "A direct-response static ad for Cherry Ruff Pharmacy. Bold text 'One Call. Thats All It Takes.' in massive gold #C9A84C elegant serif font centered. Below: 'We call your old pharmacy. We transfer your prescriptions. We set up free delivery. You do nothing.' in cherry red #8B1A2B sans-serif. Small cherry icon logo at bottom. Cream #FDF6F0 background. Urgency-meets-simplicity. Conversion-optimized. Do not include any phone numbers, addresses, or URLs. Clean professional pharmacy advertising layout.",
+    "headline_text": "One Call. That's All It Takes."
+  },
+  {
+    "id": 31,
+    "template_name": "coverage_map",
+    "prompt": "A coverage-focused static ad for Cherry Ruff Pharmacy. A simplified map silhouette of western Wayne County Michigan with five dots marking Garden City, Westland, Inkster, Wayne, and Dearborn Heights, each labeled. Lines connecting all dots to a central cherry icon. 'Free Delivery Across 5 Cities' in elegant serif cherry red #8B1A2B headline above. Cream #FDF6F0 background. Community-focused, impactful composition. Do not include any phone numbers, addresses, or URLs. Professional pharmacy advertising.",
+    "headline_text": "Free Delivery Across 5 Cities"
+  },
+  {
+    "id": 32,
+    "template_name": "seasonal_flu",
+    "prompt": "A seasonal static ad for Cherry Ruff Pharmacy. Fall flu season themed imagery with warm autumn colors and leaves. A pharmacist administering a flu shot in a cozy pharmacy setting with cherry red branding. 'Flu Season is Here. Walk-In Vaccines. No Appointment Needed.' in elegant serif cherry red #8B1A2B font. Warm autumnal color grading. Do not include any phone numbers, addresses, or URLs. Professional healthcare advertising design.",
+    "headline_text": "Flu Season is Here. Walk-In Vaccines. No Appointment Needed."
+  },
+  {
+    "id": 33,
+    "template_name": "behind_the_counter",
+    "prompt": "A behind-the-scenes static ad for Cherry Ruff Pharmacy. Imagery showing a pharmacist carefully reviewing a prescription with reading glasses, checking labels against a patient profile on screen. 'This is What Care Looks Like When Your Pharmacist Isnt Filling 500 Scripts a Day.' in elegant serif cherry red #8B1A2B font. Warm authentic color grading. Transparent, quality-focused healthcare advertising. Do not include any phone numbers, addresses, or URLs. Professional photography.",
+    "headline_text": "This is What Care Looks Like When Your Pharmacist Isn't Filling 500 Scripts a Day."
+  },
+  {
+    "id": 34,
+    "template_name": "wish_i_switched",
+    "prompt": "A testimonial-style static ad for Cherry Ruff Pharmacy. Large quote text 'I Wish I Had Switched Years Ago.' in elegant serif cherry red #8B1A2B font centered. Below in smaller bark brown #2C1810 sans-serif: 'The number one thing our new patients tell us.' Visual of a warm pharmacy counter with a pharmacist and patient laughing together in the background, slightly blurred. Cream #FDF6F0 background. Authentic, trustworthy feel. Do not include any phone numbers, addresses, or URLs. Professional ad layout.",
+    "headline_text": "I Wish I Had Switched Years Ago. — The #1 thing our new patients tell us."
+  },
+  {
+    "id": 35,
+    "template_name": "garden_city_own",
+    "prompt": "A community pride static ad for Cherry Ruff Pharmacy. Bold headline 'Garden Citys Pharmacy. Not Wall Streets.' in elegant serif cherry red #8B1A2B font. Supporting text: 'Locally owned. Your money stays in the community. Your pharmacist lives here too.' in bark brown #2C1810 sans-serif. Warm image of a neighborhood street with small businesses and American flags. Cream #FDF6F0 background. Hometown pride, anti-corporate. Do not include any phone numbers, addresses, or URLs. Professional pharmacy advertising.",
+    "headline_text": "Garden City's Pharmacy. Not Wall Street's."
+  },
+  {
+    "id": 36,
+    "template_name": "price_shock",
+    "prompt": "A static ad for Cherry Ruff Pharmacy addressing price surprises. Headline 'Your Prescription Was $10 Last Month. Now Its $247. Sound Familiar?' in elegant serif cherry red #8B1A2B font. Supporting text: 'At Cherry Ruff, we check every discount, every coupon, every option before you pay. No surprises at the counter.' in bark brown #2C1810 sans-serif. Cream #FDF6F0 background. Empathetic, problem-solving tone. Do not include any phone numbers, addresses, or URLs. Professional pharmacy advertising.",
+    "headline_text": "Your Prescription Was $10 Last Month. Now It's $247. Sound Familiar?"
+  },
+  {
+    "id": 37,
+    "template_name": "try_one_prescription",
+    "prompt": "A risk-reversal static ad for Cherry Ruff Pharmacy. Bold headline 'Transfer One Prescription. Just One. See the Difference.' in elegant serif cherry red #8B1A2B font. Supporting text: 'Keep your others wherever you want. No commitment. No contract. Just better pharmacy care.' in bark brown #2C1810 sans-serif. Small cherry icon at bottom. Cream #FDF6F0 background. Low pressure, inviting tone. Do not include any phone numbers, addresses, or URLs. Professional pharmacy advertising.",
+    "headline_text": "Transfer One Prescription. Just One. See the Difference."
+  },
+  {
+    "id": 38,
+    "template_name": "offer_promotion",
+    "prompt": "A promotional static ad for Cherry Ruff Pharmacy. Large bold text reading 'FREE Prescription Delivery' in light cherry #B8344A. Image of a friendly pharmacist handing a prescription bag to a smiling patient. Cream #FDF6F0 background. Elegant serif and clean sans-serif typography. Clean conversion-focused layout. Call to action button reading 'Transfer Today'. Do not include any phone numbers, addresses, or URLs. Professional pharmacy advertising design.",
+    "headline_text": "FREE Prescription Delivery — Transfer Today"
+  },
+  {
+    "id": 39,
+    "template_name": "senior_care",
+    "prompt": "A static ad for Cherry Ruff Pharmacy targeting seniors. Headline 'On 4 or More Medications? Your Pharmacist Should Know Every Single One.' in elegant serif cherry red #8B1A2B font. Supporting text: 'We review your full medication profile for interactions, side effects, and safer alternatives. We accept Medicare, Medicaid, and Humana.' in bark brown #2C1810 sans-serif. Visual of a pharmacist patiently explaining a medication label to an older patient across a cherry red counter. Cream #FDF6F0 background. Warm, respectful, trustworthy. Do not include any phone numbers, addresses, or URLs. Professional healthcare advertising.",
+    "headline_text": "On 4+ Medications? Your Pharmacist Should Know Every Single One."
+  },
+  {
+    "id": 40,
+    "template_name": "acadian_speed",
+    "prompt": "A static ad for Cherry Ruff Pharmacy highlighting clinic co-location speed. Headline 'Your Prescription is Ready Before You Reach the Parking Lot.' in elegant serif gold #C9A84C font on cherry red #8B1A2B background. Supporting text: 'Cherry Ruff Pharmacy is inside Acadian Clinic. See the doctor. Walk next door. Done.' in cream #FDF6F0 sans-serif. Visual of a medical clinic hallway with a pharmacy counter visible just steps away. Warm lighting. Do not include any phone numbers, addresses, or URLs. Professional healthcare advertising.",
+    "headline_text": "Your Prescription is Ready Before You Reach the Parking Lot."
+  }
+]

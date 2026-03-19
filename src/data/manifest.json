@@ -1,0 +1,126 @@
+{
+  "brand": "Cherry Ruff Pharmacy",
+  "location": "Garden City, MI",
+  "generated": "2026-03-19",
+  "ads": [
+    {
+      "id": "how_it_works",
+      "file": "/ads/cherryruff/how_it_works.png",
+      "headline": "Switching Takes 60 Seconds. Here's How.",
+      "category": "conversion",
+      "tags": ["transfer", "how-to", "process"]
+    },
+    {
+      "id": "stat_data_hero",
+      "file": "/ads/cherryruff/stat_data_hero.png",
+      "headline": "5 minutes. Your last CVS wait was probably 45.",
+      "category": "competitive",
+      "tags": ["speed", "wait-time", "data"]
+    },
+    {
+      "id": "myth_buster",
+      "file": "/ads/cherryruff/myth_buster.png",
+      "headline": "You give us one phone call. We handle everything else.",
+      "category": "conversion",
+      "tags": ["transfer", "myth", "easy"]
+    },
+    {
+      "id": "negative_marketing",
+      "file": "/ads/cherryruff/negative_marketing.png",
+      "headline": "Walk into Cherry Ruff. Walk out with your meds. Five minutes.",
+      "category": "competitive",
+      "tags": ["speed", "wait-time", "chain-pain"]
+    },
+    {
+      "id": "problem_solution",
+      "file": "/ads/cherryruff/problem_solution.png",
+      "headline": "We pick up on the first ring. Your meds are ready when you walk in.",
+      "category": "competitive",
+      "tags": ["phone", "service", "chain-pain"]
+    },
+    {
+      "id": "bold_claim",
+      "file": "/ads/cherryruff/bold_claim.png",
+      "headline": "Your Chain Pharmacy Doesn't Know Your Name. We Will By Tomorrow.",
+      "category": "emotional",
+      "tags": ["personal", "identity", "bold"]
+    },
+    {
+      "id": "urgency_cvs",
+      "file": "/ads/cherryruff/urgency_cvs.png",
+      "headline": "Still Standing in Line at CVS?",
+      "category": "competitive",
+      "tags": ["urgency", "cvs", "switch"]
+    },
+    {
+      "id": "ugc_social_style",
+      "file": "/ads/cherryruff/ugc_social_style.png",
+      "headline": "switched from walgreens last week. they DELIVER for FREE???",
+      "category": "social-proof",
+      "tags": ["ugc", "delivery", "social"]
+    },
+    {
+      "id": "complete_care",
+      "file": "/ads/cherryruff/complete_care.png",
+      "headline": "See the Doctor. Get Your Meds. Same Building. Same Visit.",
+      "category": "differentiator",
+      "tags": ["clinic", "convenience", "acadian"]
+    },
+    {
+      "id": "customer_story",
+      "file": "/ads/cherryruff/customer_story.png",
+      "headline": "I spent 10 years at CVS on Ford Road. Now my meds show up at my door.",
+      "category": "social-proof",
+      "tags": ["testimonial", "local", "delivery"]
+    },
+    {
+      "id": "we_answer_the_phone",
+      "file": "/ads/cherryruff/we_answer_the_phone.png",
+      "headline": "A Real Person Answers Our Phone. On the First Ring.",
+      "category": "differentiator",
+      "tags": ["phone", "service", "personal"]
+    },
+    {
+      "id": "pharmacy_closed",
+      "file": "/ads/cherryruff/pharmacy_closed.png",
+      "headline": "Your Pharmacy Closed. We Didn't.",
+      "category": "emotional",
+      "tags": ["closures", "community", "trust"]
+    },
+    {
+      "id": "inertia_breaker",
+      "file": "/ads/cherryruff/inertia_breaker.png",
+      "headline": "You've Been Meaning to Switch Pharmacies for a Year. This is Your Sign.",
+      "category": "conversion",
+      "tags": ["inertia", "switch", "cta"]
+    },
+    {
+      "id": "lost_prescription",
+      "file": "/ads/cherryruff/lost_prescription.png",
+      "headline": "We've Never Lost a Prescription. Can Your Pharmacy Say That?",
+      "category": "differentiator",
+      "tags": ["safety", "trust", "bold"]
+    },
+    {
+      "id": "one_call",
+      "file": "/ads/cherryruff/one_call.png",
+      "headline": "One Call. That's All It Takes.",
+      "category": "conversion",
+      "tags": ["transfer", "easy", "cta"]
+    },
+    {
+      "id": "us_vs_them",
+      "file": "/ads/cherryruff/us_vs_them.png",
+      "headline": "Choose Personal Care Over the Crowd",
+      "category": "competitive",
+      "tags": ["comparison", "chain-pain", "personal"]
+    }
+  ],
+  "categories": {
+    "conversion": "Transfer & Action",
+    "competitive": "Chain Pain Points",
+    "emotional": "Emotional & Bold",
+    "social-proof": "Social Proof",
+    "differentiator": "What Makes Us Different"
+  }
+}
