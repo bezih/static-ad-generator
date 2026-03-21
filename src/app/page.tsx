@@ -45,7 +45,7 @@ const steps = [
   { num: "01", title: "Enter Your Brand", desc: "Name, website, product. That's all we need." },
   { num: "02", title: "Agents Research", desc: "5 AI agents analyze your market, competitors, and audience pain points." },
   { num: "03", title: "Prompts Generated", desc: "40 conversion-optimized ad prompts tailored to your brand DNA." },
-  { num: "04", title: "Images Created", desc: "FAL AI generates production-ready static ads in seconds." },
+  { num: "04", title: "Images & Videos", desc: "Static ads generated instantly, plus Kling AI video ads with 5 cinematic styles." },
 ];
 
 export default function Home() {
@@ -228,7 +228,7 @@ export default function Home() {
               Ready to forge your ads?
             </h2>
             <p className="relative text-silver text-lg mb-10 max-w-lg mx-auto">
-              Enter your brand. Let the agents work. Download your campaign.
+              Enter your brand. Let the agents work. Download ads and videos.
             </p>
             <Link
               href="/generate"

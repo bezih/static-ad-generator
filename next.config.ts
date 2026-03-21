@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "v3.fal.media",
       },
+      {
+        protocol: "https",
+        hostname: "*.fal.media",
+      },
     ],
   },
 };
