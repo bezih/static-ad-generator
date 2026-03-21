@@ -7,7 +7,7 @@ fal.config({
 
 export async function POST(request: NextRequest) {
   try {
-    const { imageUrl, prompt, duration = "5", aspectRatio = "9:16" } = await request.json();
+    const { imageUrl, prompt, duration = "5" } = await request.json();
 
     if (!imageUrl || !prompt) {
       return NextResponse.json({ error: "Image URL and prompt are required" }, { status: 400 });
@@ -18,12 +18,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Use Kling v2 master image-to-video for best quality with product fidelity
+    // aspect_ratio is inferred from the source image for image-to-video
     const result = await fal.subscribe("fal-ai/kling-video/v2/master/image-to-video", {
       input: {
         image_url: imageUrl,
         prompt,
-        duration: duration,
-        aspect_ratio: aspectRatio,
+        duration: duration as "5" | "10",
       },
     });
 

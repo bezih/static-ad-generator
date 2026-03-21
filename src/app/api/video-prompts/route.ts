@@ -7,8 +7,8 @@ export async function POST(request: NextRequest) {
   try {
     const { brandDna, ads, videoStyle, withAudio } = await request.json();
 
-    if (!brandDna || !ads || !Array.isArray(ads) || ads.length === 0) {
-      return NextResponse.json({ error: "Brand DNA and ads are required" }, { status: 400 });
+    if (!ads || !Array.isArray(ads) || ads.length === 0) {
+      return NextResponse.json({ error: "Ads array is required" }, { status: 400 });
     }
 
     const styleDescriptions: Record<string, string> = {

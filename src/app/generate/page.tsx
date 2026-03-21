@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Nav } from "@/components/Nav";
 
-type Step = "input" | "scraping" | "research" | "prompts" | "selecting" | "generating" | "done" | "video-select" | "video-prompts" | "video-generating" | "video-done";
+type Step = "input" | "scraping" | "research" | "prompts" | "selecting" | "generating" | "done" | "video-select" | "video-prompts" | "video-generating" | "video-done" | "quick-video";
 
 interface BrandDna {
   brandOverview: {
@@ -116,6 +116,11 @@ export default function GeneratePage() {
   const [generatedVideos, setGeneratedVideos] = useState<GeneratedVideo[]>([]);
   const [videoGenIndex, setVideoGenIndex] = useState(0);
   const videoAbortRef = useRef(false);
+  // Quick video upload state
+  const [inputMode, setInputMode] = useState<"brand" | "upload">("brand");
+  const [uploadedImages, setUploadedImages] = useState<{ file: File; preview: string; uploading: boolean; url?: string }[]>([]);
+  const [uploadVideoPrompt, setUploadVideoPrompt] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [savedCampaigns, setSavedCampaigns] = useState<
     { brandName: string; date: string; ads: GeneratedAd[] }[]
   >([]);
@@ -406,7 +411,6 @@ export default function GeneratePage() {
             imageUrl: ad.imageUrl,
             prompt: vp.videoPrompt,
             duration: String(vp.suggestedDuration),
-            aspectRatio: "9:16",
           }),
         });
 
@@ -450,6 +454,95 @@ export default function GeneratePage() {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } catch {}
+  };
+
+  // --- Quick video: upload images ---
+  const handleFileSelect = async (files: FileList | null) => {
+    if (!files) return;
+    const newImages = Array.from(files)
+      .filter((f) => f.type.startsWith("image/"))
+      .slice(0, 10 - uploadedImages.length) // Max 10
+      .map((file) => ({
+        file,
+        preview: URL.createObjectURL(file),
+        uploading: true,
+        url: undefined as string | undefined,
+      }));
+
+    setUploadedImages((prev) => [...prev, ...newImages]);
+
+    // Upload each to fal storage
+    for (const img of newImages) {
+      try {
+        const formData = new FormData();
+        formData.append("file", img.file);
+        const res = await fetch("/api/upload", { method: "POST", body: formData });
+        const data = await res.json();
+        if (data.url) {
+          setUploadedImages((prev) =>
+            prev.map((u) => (u.preview === img.preview ? { ...u, uploading: false, url: data.url } : u))
+          );
+        } else {
+          setUploadedImages((prev) => prev.filter((u) => u.preview !== img.preview));
+        }
+      } catch {
+        setUploadedImages((prev) => prev.filter((u) => u.preview !== img.preview));
+      }
+    }
+  };
+
+  const removeUploadedImage = (preview: string) => {
+    setUploadedImages((prev) => {
+      const removed = prev.find((u) => u.preview === preview);
+      if (removed) URL.revokeObjectURL(removed.preview);
+      return prev.filter((u) => u.preview !== preview);
+    });
+  };
+
+  const startQuickVideo = () => {
+    const ready = uploadedImages.filter((u) => u.url);
+    if (ready.length === 0) return;
+
+    // Create fake "generated" ads from uploaded images so video pipeline works
+    const fakeAds: GeneratedAd[] = ready.map((u, i) => ({
+      templateName: u.file.name.replace(/\.[^.]+$/, "") || `upload_${i + 1}`,
+      headline: uploadVideoPrompt || `Uploaded image ${i + 1}`,
+      imageUrl: u.url!,
+      category: "uploaded",
+    }));
+
+    setGenerated(fakeAds);
+    setSelectedVideoAds(fakeAds.map((_, i) => i));
+    setStep("quick-video");
+  };
+
+  // Quick video: generate prompts for uploaded images then generate videos
+  const startQuickVideoGeneration = async () => {
+    setStep("video-prompts");
+    setError("");
+
+    const adsToAnimate = selectedVideoAds.map((idx) => generated[idx]);
+
+    try {
+      const res = await fetch("/api/video-prompts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          brandDna: null,
+          ads: adsToAnimate,
+          videoStyle,
+          withAudio,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+
+      await generateVideos(adsToAnimate, data.videoPrompts);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Video prompt generation failed");
+      setStep("quick-video");
+    }
   };
 
   const allSteps = ["input", "scraping", "research", "prompts", "selecting", "generating", "done", "video-select", "video-prompts", "video-generating", "video-done"];
@@ -506,57 +599,187 @@ export default function GeneratePage() {
             {/* Step 1: Brand Input */}
             {step === "input" && (
               <motion.div key="input" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
-                <h1 className="font-display text-4xl md:text-5xl text-ivory mb-3">Tell us about your brand.</h1>
-                <p className="text-silver text-lg mb-12 max-w-xl">
-                  We&apos;ll scrape your website, analyze your brand identity, and deploy 5 research agents to build your campaign.
+                <h1 className="font-display text-4xl md:text-5xl text-ivory mb-3">
+                  {inputMode === "brand" ? "Tell us about your brand." : "Upload images for video."}
+                </h1>
+                <p className="text-silver text-lg mb-8 max-w-xl">
+                  {inputMode === "brand"
+                    ? "We'll scrape your website, analyze your brand identity, and deploy 5 research agents to build your campaign."
+                    : "Upload reference images and we'll generate stunning video ads with Kling AI — no brand setup needed."}
                 </p>
 
-                <div className="glass rounded-2xl p-8 max-w-2xl">
-                  <div className="space-y-6">
-                    <div>
-                      <label className="block text-sm text-pearl mb-2 font-medium">Brand Name <span className="text-gold">*</span></label>
-                      <input type="text" value={brandName} onChange={(e) => setBrandName(e.target.value)} placeholder="Acme Inc."
-                        className="w-full px-5 py-4 rounded-xl bg-obsidian border border-ash text-ivory placeholder:text-ash focus:outline-none focus:border-gold/40 focus:ring-1 focus:ring-gold/20 transition-all" />
-                    </div>
-                    <div>
-                      <label className="block text-sm text-pearl mb-2 font-medium">Website URL <span className="text-gold">*</span></label>
-                      <input type="text" value={brandUrl} onChange={(e) => setBrandUrl(e.target.value)} placeholder="https://example.com"
-                        className="w-full px-5 py-4 rounded-xl bg-obsidian border border-ash text-ivory placeholder:text-ash focus:outline-none focus:border-gold/40 focus:ring-1 focus:ring-gold/20 transition-all" />
-                    </div>
-                    <div>
-                      <label className="block text-sm text-pearl mb-2 font-medium">Product / Service</label>
-                      <input type="text" value={product} onChange={(e) => setProduct(e.target.value)} placeholder="Optional — we'll infer from your site"
-                        className="w-full px-5 py-4 rounded-xl bg-obsidian border border-ash text-ivory placeholder:text-ash focus:outline-none focus:border-gold/40 focus:ring-1 focus:ring-gold/20 transition-all" />
-                    </div>
-                  </div>
-                  <button onClick={startScrape} disabled={!brandName.trim() || !brandUrl.trim()}
-                    className="mt-8 w-full py-4 rounded-xl bg-gradient-to-r from-gold to-gold-dark text-obsidian font-semibold text-sm disabled:opacity-30 disabled:cursor-not-allowed transition-all hover:shadow-[0_0_40px_-8px_rgba(201,168,76,0.5)]">
-                    Deploy Research Agents
+                {/* Mode Toggle */}
+                <div className="flex gap-2 mb-8 max-w-2xl">
+                  <button
+                    onClick={() => setInputMode("brand")}
+                    className={`flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all ${
+                      inputMode === "brand"
+                        ? "bg-gold/15 text-gold border border-gold/30"
+                        : "glass text-silver hover:text-ivory border border-transparent"
+                    }`}
+                  >
+                    <span className="flex items-center justify-center gap-2">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9" />
+                      </svg>
+                      Full Campaign
+                    </span>
+                  </button>
+                  <button
+                    onClick={() => setInputMode("upload")}
+                    className={`flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all ${
+                      inputMode === "upload"
+                        ? "bg-gold/15 text-gold border border-gold/30"
+                        : "glass text-silver hover:text-ivory border border-transparent"
+                    }`}
+                  >
+                    <span className="flex items-center justify-center gap-2">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                      Quick Video
+                    </span>
                   </button>
                 </div>
 
-                {/* Saved Campaigns */}
-                {savedCampaigns.length > 0 && (
-                  <div className="mt-10 max-w-2xl">
-                    <h3 className="text-sm text-silver font-medium mb-4 tracking-wider uppercase">Previous Campaigns</h3>
-                    <div className="space-y-2">
-                      {savedCampaigns.map((c, i) => (
-                        <button
-                          key={i}
-                          onClick={() => loadCampaign(c)}
-                          className="w-full flex items-center justify-between p-4 rounded-xl glass hover:border-gold/20 transition-all text-left"
-                        >
-                          <div>
-                            <p className="text-ivory font-medium">{c.brandName}</p>
-                            <p className="text-xs text-silver">{c.ads.length} ads &middot; {new Date(c.date).toLocaleDateString()}</p>
-                          </div>
-                          <svg className="w-4 h-4 text-silver" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                          </svg>
-                        </button>
-                      ))}
+                {inputMode === "brand" ? (
+                  <>
+                    <div className="glass rounded-2xl p-8 max-w-2xl">
+                      <div className="space-y-6">
+                        <div>
+                          <label className="block text-sm text-pearl mb-2 font-medium">Brand Name <span className="text-gold">*</span></label>
+                          <input type="text" value={brandName} onChange={(e) => setBrandName(e.target.value)} placeholder="Acme Inc."
+                            className="w-full px-5 py-4 rounded-xl bg-obsidian border border-ash text-ivory placeholder:text-ash focus:outline-none focus:border-gold/40 focus:ring-1 focus:ring-gold/20 transition-all" />
+                        </div>
+                        <div>
+                          <label className="block text-sm text-pearl mb-2 font-medium">Website URL <span className="text-gold">*</span></label>
+                          <input type="text" value={brandUrl} onChange={(e) => setBrandUrl(e.target.value)} placeholder="https://example.com"
+                            className="w-full px-5 py-4 rounded-xl bg-obsidian border border-ash text-ivory placeholder:text-ash focus:outline-none focus:border-gold/40 focus:ring-1 focus:ring-gold/20 transition-all" />
+                        </div>
+                        <div>
+                          <label className="block text-sm text-pearl mb-2 font-medium">Product / Service</label>
+                          <input type="text" value={product} onChange={(e) => setProduct(e.target.value)} placeholder="Optional — we'll infer from your site"
+                            className="w-full px-5 py-4 rounded-xl bg-obsidian border border-ash text-ivory placeholder:text-ash focus:outline-none focus:border-gold/40 focus:ring-1 focus:ring-gold/20 transition-all" />
+                        </div>
+                      </div>
+                      <button onClick={startScrape} disabled={!brandName.trim() || !brandUrl.trim()}
+                        className="mt-8 w-full py-4 rounded-xl bg-gradient-to-r from-gold to-gold-dark text-obsidian font-semibold text-sm disabled:opacity-30 disabled:cursor-not-allowed transition-all hover:shadow-[0_0_40px_-8px_rgba(201,168,76,0.5)]">
+                        Deploy Research Agents
+                      </button>
                     </div>
-                  </div>
+
+                    {/* Saved Campaigns */}
+                    {savedCampaigns.length > 0 && (
+                      <div className="mt-10 max-w-2xl">
+                        <h3 className="text-sm text-silver font-medium mb-4 tracking-wider uppercase">Previous Campaigns</h3>
+                        <div className="space-y-2">
+                          {savedCampaigns.map((c, i) => (
+                            <button
+                              key={i}
+                              onClick={() => loadCampaign(c)}
+                              className="w-full flex items-center justify-between p-4 rounded-xl glass hover:border-gold/20 transition-all text-left"
+                            >
+                              <div>
+                                <p className="text-ivory font-medium">{c.brandName}</p>
+                                <p className="text-xs text-silver">{c.ads.length} ads &middot; {new Date(c.date).toLocaleDateString()}</p>
+                              </div>
+                              <svg className="w-4 h-4 text-silver" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                              </svg>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {/* Quick Video Upload */}
+                    <div className="glass rounded-2xl p-8 max-w-2xl">
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        className="hidden"
+                        onChange={(e) => handleFileSelect(e.target.files)}
+                      />
+
+                      {/* Drop zone */}
+                      <div
+                        onClick={() => fileInputRef.current?.click()}
+                        onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add("border-gold/40"); }}
+                        onDragLeave={(e) => { e.preventDefault(); e.currentTarget.classList.remove("border-gold/40"); }}
+                        onDrop={(e) => { e.preventDefault(); e.currentTarget.classList.remove("border-gold/40"); handleFileSelect(e.dataTransfer.files); }}
+                        className="border-2 border-dashed border-ash rounded-xl p-10 text-center cursor-pointer hover:border-gold/30 transition-colors"
+                      >
+                        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-gold/20 to-gold-dark/20 flex items-center justify-center mx-auto mb-4">
+                          <svg className="w-6 h-6 text-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                          </svg>
+                        </div>
+                        <p className="text-ivory font-medium mb-1">Drop images here or click to browse</p>
+                        <p className="text-xs text-silver">PNG, JPG, WebP — up to 10 images</p>
+                      </div>
+
+                      {/* Uploaded images preview */}
+                      {uploadedImages.length > 0 && (
+                        <div className="mt-6">
+                          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                            {uploadedImages.map((img) => (
+                              <div key={img.preview} className="relative aspect-square rounded-lg overflow-hidden group">
+                                <Image src={img.preview} alt="" fill className="object-cover" sizes="120px" unoptimized />
+                                {img.uploading && (
+                                  <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                                    <svg className="w-5 h-5 text-gold animate-spin" fill="none" viewBox="0 0 24 24">
+                                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                                    </svg>
+                                  </div>
+                                )}
+                                {!img.uploading && img.url && (
+                                  <div className="absolute top-1 right-1 w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
+                                    <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                  </div>
+                                )}
+                                <button
+                                  onClick={(e) => { e.stopPropagation(); removeUploadedImage(img.preview); }}
+                                  className="absolute top-1 left-1 w-5 h-5 rounded-full bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs"
+                                >
+                                  x
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Optional context */}
+                      <div className="mt-6">
+                        <label className="block text-sm text-pearl mb-2 font-medium">Description <span className="text-silver text-xs">(optional)</span></label>
+                        <input
+                          type="text"
+                          value={uploadVideoPrompt}
+                          onChange={(e) => setUploadVideoPrompt(e.target.value)}
+                          placeholder="e.g. Premium skincare product, luxury watch, etc."
+                          className="w-full px-5 py-4 rounded-xl bg-obsidian border border-ash text-ivory placeholder:text-ash focus:outline-none focus:border-gold/40 focus:ring-1 focus:ring-gold/20 transition-all"
+                        />
+                      </div>
+
+                      <button
+                        onClick={startQuickVideo}
+                        disabled={uploadedImages.filter((u) => u.url).length === 0 || uploadedImages.some((u) => u.uploading)}
+                        className="mt-8 w-full py-4 rounded-xl bg-gradient-to-r from-gold to-gold-dark text-obsidian font-semibold text-sm disabled:opacity-30 disabled:cursor-not-allowed transition-all hover:shadow-[0_0_40px_-8px_rgba(201,168,76,0.5)]"
+                      >
+                        {uploadedImages.some((u) => u.uploading)
+                          ? "Uploading..."
+                          : `Continue with ${uploadedImages.filter((u) => u.url).length} image${uploadedImages.filter((u) => u.url).length !== 1 ? "s" : ""}`
+                        }
+                      </button>
+                    </div>
+                  </>
                 )}
               </motion.div>
             )}
@@ -837,6 +1060,74 @@ export default function GeneratePage() {
                 )}
               </motion.div>
             )}
+            {/* Quick Video — style selection for uploaded images */}
+            {step === "quick-video" && (
+              <motion.div key="quick-video" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
+                <h1 className="font-display text-4xl text-ivory mb-2">Choose your video style.</h1>
+                <p className="text-silver mb-8">{generated.length} image{generated.length !== 1 ? "s" : ""} ready for animation.</p>
+
+                {/* Uploaded images preview strip */}
+                <div className="flex gap-3 mb-10 overflow-x-auto pb-2">
+                  {generated.map((ad, i) => (
+                    <div key={i} className="relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 border border-ivory/10">
+                      <Image src={ad.imageUrl} alt={ad.headline} fill className="object-cover" sizes="80px" unoptimized />
+                    </div>
+                  ))}
+                </div>
+
+                {/* Video Style Selection */}
+                <div className="mb-10">
+                  <h3 className="text-sm text-pearl font-medium mb-4 tracking-wider uppercase">Video Style</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
+                    {VIDEO_STYLES.map((style) => (
+                      <motion.button key={style.id} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                        onClick={() => setVideoStyle(style.id)}
+                        className={`text-left p-4 rounded-xl border transition-all ${
+                          videoStyle === style.id ? "glass-gold border-gold/30" : "glass border-transparent hover:border-ivory/10"
+                        }`}>
+                        <div className="text-2xl mb-2">{style.icon}</div>
+                        <p className="text-sm font-medium text-ivory">{style.name}</p>
+                        <p className="text-xs text-silver mt-1">{style.desc}</p>
+                        <p className="text-xs text-gold/60 mt-2">{style.price}</p>
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Audio Toggle */}
+                <div className="glass rounded-2xl p-5 mb-10 flex items-center justify-between max-w-md">
+                  <div className="flex items-center gap-3">
+                    <span className="text-xl">{withAudio ? "🔊" : "🔇"}</span>
+                    <div>
+                      <p className="text-sm font-medium text-ivory">Add audio/sound</p>
+                      <p className="text-xs text-silver">Ambient sound effects for your videos</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setWithAudio(!withAudio)}
+                    className={`relative w-12 h-6 rounded-full transition-colors ${withAudio ? "bg-gold" : "bg-ash"}`}
+                  >
+                    <motion.div
+                      className="absolute top-0.5 w-5 h-5 rounded-full bg-white shadow"
+                      animate={{ left: withAudio ? "26px" : "2px" }}
+                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    />
+                  </button>
+                </div>
+
+                <div className="flex gap-3">
+                  <button onClick={startQuickVideoGeneration}
+                    className="flex-1 py-5 rounded-xl bg-gradient-to-r from-gold to-gold-dark text-obsidian font-semibold transition-all hover:shadow-[0_0_40px_-8px_rgba(201,168,76,0.5)]">
+                    Generate {generated.length} Video{generated.length !== 1 ? "s" : ""}
+                  </button>
+                  <button onClick={() => { setStep("input"); setGenerated([]); }}
+                    className="px-6 py-5 rounded-xl text-sm font-medium text-silver border border-ivory/10 hover:bg-ivory/5 transition-colors">
+                    Back
+                  </button>
+                </div>
+              </motion.div>
+            )}
+
             {/* Video Select — choose ads to animate + style */}
             {step === "video-select" && (
               <motion.div key="video-select" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
@@ -986,17 +1277,19 @@ export default function GeneratePage() {
                   <div className="mb-10 flex items-end justify-between">
                     <div>
                       <h1 className="font-display text-4xl text-ivory mb-2">Video ads ready.</h1>
-                      <p className="text-silver">{generatedVideos.length} video{generatedVideos.length !== 1 ? "s" : ""} generated for <span className="text-gold">{brandName}</span></p>
+                      <p className="text-silver">{generatedVideos.length} video{generatedVideos.length !== 1 ? "s" : ""} generated{brandName ? <> for <span className="text-gold">{brandName}</span></> : null}</p>
                     </div>
                     <div className="flex gap-3">
+                      {generated.length > 0 && generated[0]?.category !== "uploaded" && (
+                        <button
+                          onClick={() => setStep("done")}
+                          className="px-6 py-3 rounded-xl text-sm font-medium text-silver border border-ivory/10 hover:bg-ivory/5 transition-colors"
+                        >
+                          Back to Images
+                        </button>
+                      )}
                       <button
-                        onClick={() => setStep("done")}
-                        className="px-6 py-3 rounded-xl text-sm font-medium text-silver border border-ivory/10 hover:bg-ivory/5 transition-colors"
-                      >
-                        Back to Images
-                      </button>
-                      <button
-                        onClick={() => { setStep("input"); setGenerated([]); setGeneratedVideos([]); setBrandName(""); setBrandUrl(""); setProduct(""); setAgents(AGENTS.map((a) => ({ ...a }))); }}
+                        onClick={() => { setStep("input"); setGenerated([]); setGeneratedVideos([]); setUploadedImages([]); setBrandName(""); setBrandUrl(""); setProduct(""); setAgents(AGENTS.map((a) => ({ ...a }))); }}
                         className="px-6 py-3 rounded-xl text-sm font-medium text-silver border border-ivory/10 hover:bg-ivory/5 transition-colors"
                       >
                         New Campaign
