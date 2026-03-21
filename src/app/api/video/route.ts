@@ -17,8 +17,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "FAL_KEY not configured" }, { status: 500 });
     }
 
-    // Use Kling v2.0 image-to-video for best quality with product fidelity
-    const result = await fal.subscribe("fal-ai/kling-video/v2.0/master/image-to-video", {
+    // Use Kling v2 master image-to-video for best quality with product fidelity
+    const result = await fal.subscribe("fal-ai/kling-video/v2/master/image-to-video", {
       input: {
         image_url: imageUrl,
         prompt,
