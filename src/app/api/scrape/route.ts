@@ -5,7 +5,7 @@ const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 export async function POST(request: NextRequest) {
   try {
-    const { url, brandName, product } = await request.json();
+    const { url, brandName, product, businessType: userBusinessType } = await request.json();
 
     if (!url || !brandName) {
       return NextResponse.json({ error: "URL and brand name required" }, { status: 400 });
@@ -96,6 +96,7 @@ ${textContent || "Could not fetch website content. Use your knowledge of the bra
 
 Return a JSON object with this exact structure:
 {
+  "businessType": "${userBusinessType || "auto-detect: product | service | location | digital | personal_brand"}",
   "brandOverview": {
     "name": "${brandName}",
     "website": "${url}",
@@ -119,7 +120,13 @@ Return a JSON object with this exact structure:
     "keyFeatures": ["feature 1", "feature 2", "feature 3"],
     "keyBenefits": ["benefit 1", "benefit 2", "benefit 3"],
     "pricePoint": "premium/mid-range/affordable or specific price",
-    "packagingDescription": "visual description of the product"
+    "packagingDescription": "visual description of the product or service setting"
+  },
+  "serviceDetails": {
+    "serviceNames": ["service 1", "service 2", "service 3"],
+    "credentials": ["credential 1", "credential 2"],
+    "serviceArea": "geographic area served",
+    "bookingProcess": "how customers book/engage"
   },
   "advertisingStyle": {
     "adTone": "how their ads feel",
@@ -128,6 +135,9 @@ Return a JSON object with this exact structure:
     "uniqueAdvantage": "what sets them apart from competitors"
   }
 }
+
+For businessType: "product" = physical goods/ecommerce, "service" = clinic/law firm/agency/consulting, "location" = restaurant/gym/hotel, "digital" = SaaS/app, "personal_brand" = coach/creator/influencer.
+If the user specified "${userBusinessType}", use that. Otherwise detect from website content.
 
 Return ONLY the JSON object, no markdown formatting or explanation.`,
         },
@@ -152,6 +162,7 @@ Return ONLY the JSON object, no markdown formatting or explanation.`,
       brandDna,
       productImages,
       hexColors,
+      businessType: brandDna.businessType || userBusinessType || "service",
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Scraping failed";
