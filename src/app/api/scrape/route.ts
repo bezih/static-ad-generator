@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
     const cssContent = styleBlocks.join(" ").slice(0, 5000);
     const hexColors = [...new Set((cssContent + html).match(/#[0-9a-fA-F]{6}/g) || [])].slice(0, 20);
 
-    // Use Claude to analyze the brand
+    // Use Claude to analyze the brand with business type detection
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 3000,
@@ -90,6 +90,7 @@ BRAND NAME: ${brandName}
 WEBSITE URL: ${url}
 PRODUCT/SERVICE: ${product || "Not specified — infer from website content"}
 COLORS FOUND ON SITE: ${hexColors.join(", ") || "None extracted"}
+IMAGES FOUND: ${productImages.length} images extracted from website
 
 WEBSITE CONTENT:
 ${textContent || "Could not fetch website content. Use your knowledge of the brand."}
@@ -126,8 +127,14 @@ Return a JSON object with this exact structure:
     "messagingThemes": ["theme 1", "theme 2", "theme 3"],
     "competitors": ["competitor 1", "competitor 2", "competitor 3"],
     "uniqueAdvantage": "what sets them apart from competitors"
-  }
+  },
+  "businessType": "product | service | hybrid"
 }
+
+IMPORTANT for businessType:
+- "product": physical or digital products (e-commerce, retail, CPG, SaaS tools)
+- "service": services, consulting, local businesses (pharmacies, restaurants, agencies)
+- "hybrid": both products and services
 
 Return ONLY the JSON object, no markdown formatting or explanation.`,
         },
