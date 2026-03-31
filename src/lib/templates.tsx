@@ -30,53 +30,45 @@ export interface TemplateDefinition {
 }
 
 // Helper: overlay for text readability on images
-function Overlay({ opacity = 0.55 }: { opacity?: number }) {
+function Overlay({ opacity = 0.6, direction = "bottom" }: { opacity?: number; direction?: "bottom" | "top" | "full" }) {
+  const gradient = direction === "full"
+    ? `rgba(0,0,0,${opacity})`
+    : direction === "top"
+    ? `linear-gradient(180deg, rgba(0,0,0,${opacity}) 0%, rgba(0,0,0,${opacity * 0.2}) 60%, transparent 100%)`
+    : `linear-gradient(180deg, transparent 0%, rgba(0,0,0,${opacity * 0.3}) 40%, rgba(0,0,0,${opacity}) 100%)`;
   return (
-    <div
-      style={{
-        display: "flex",
-        position: "absolute",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: `linear-gradient(180deg, rgba(0,0,0,${opacity * 0.3}) 0%, rgba(0,0,0,${opacity}) 100%)`,
-      }}
-    />
+    <div style={{ display: "flex", position: "absolute", top: 0, left: 0, right: 0, bottom: 0, background: gradient }} />
   );
 }
 
-// Helper: CTA button
-// Helper: brand logo badge — shown in corner or footer of templates
+// Helper: brand logo badge
 function LogoBadge({ logoUrl, position = "top-right" }: { logoUrl?: string; position?: "top-left" | "top-right" | "bottom-left" | "bottom-right" }) {
   if (!logoUrl) return null;
-  const posStyle: Record<string, string | number> = {
-    position: "absolute",
-    display: "flex",
-    zIndex: 10,
-  };
-  if (position.includes("top")) posStyle.top = "40px";
-  if (position.includes("bottom")) posStyle.bottom = "40px";
-  if (position.includes("left")) posStyle.left = "40px";
-  if (position.includes("right")) posStyle.right = "40px";
-
+  const posStyle: Record<string, string | number> = { position: "absolute", display: "flex", zIndex: 10 };
+  if (position.includes("top")) posStyle.top = "48px";
+  if (position.includes("bottom")) posStyle.bottom = "48px";
+  if (position.includes("left")) posStyle.left = "48px";
+  if (position.includes("right")) posStyle.right = "48px";
   return (
     <div style={posStyle}>
-      <img src={logoUrl} style={{ height: "60px", objectFit: "contain", borderRadius: "8px" }} />
+      <img src={logoUrl} style={{ height: "64px", objectFit: "contain", borderRadius: "8px" }} />
     </div>
   );
 }
 
+// Helper: CTA button — MASSIVE, impossible to miss
 function CTAButton({
   text,
   color,
   textColor = "#FFFFFF",
   size = "normal",
+  fullWidth = false,
 }: {
   text: string;
   color: string;
   textColor?: string;
   size?: "normal" | "large";
+  fullWidth?: boolean;
 }) {
   return (
     <div
@@ -84,18 +76,40 @@ function CTAButton({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: size === "large" ? "32px 80px" : "28px 64px",
+        padding: size === "large" ? "36px 96px" : "32px 72px",
         backgroundColor: color,
-        borderRadius: "16px",
+        borderRadius: "20px",
         color: textColor,
-        fontSize: size === "large" ? "36px" : "30px",
-        fontWeight: 700,
-        letterSpacing: "1px",
+        fontSize: size === "large" ? "40px" : "34px",
+        fontWeight: 800,
+        letterSpacing: "1.5px",
+        textTransform: "uppercase" as const,
+        width: fullWidth ? "100%" : undefined,
       }}
     >
       {text}
     </div>
   );
+}
+
+// Helper: colored bottom bar with CTA — gives structure to every ad
+function CTABar({ cta, color, textColor = "#FFFFFF" }: { cta: string; color: string; textColor?: string }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 72px", backgroundColor: color }}>
+      <div style={{
+        display: "flex", alignItems: "center", justifyContent: "center",
+        padding: "28px 72px", backgroundColor: textColor, borderRadius: "18px",
+        color: color, fontSize: "34px", fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase" as const,
+      }}>
+        {cta}
+      </div>
+    </div>
+  );
+}
+
+// Helper: accent bar / colored stripe for visual weight
+function AccentStripe({ color, height = "8px" }: { color: string; height?: string }) {
+  return <div style={{ display: "flex", width: "100%", height, backgroundColor: color }} />;
 }
 
 // Helper: brand footer strip
@@ -122,31 +136,35 @@ function BrandFooter({ color, text }: { color: string; text?: string }) {
 
 // ============================================================
 // TEMPLATE 1: Hero Headline
-// Full-bleed background + large headline overlay + CTA
+// Full-bleed background photo + bold text bottom + CTA bar
 // ============================================================
 const heroHeadline: TemplateDefinition = {
   id: "hero-headline",
   name: "Hero Headline",
-  description: "Full-bleed background with bold headline and CTA overlay",
+  description: "Full-bleed background with bold headline and CTA bar",
   categories: ["product", "service", "location", "digital", "personal_brand"],
   adCategories: ["conversion", "differentiator"],
   render: (props) => (
-    <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, position: "relative", overflow: "hidden", backgroundColor: props.brandColors.background }}>
-      {props.bgImageUrl && (
+    <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, position: "relative", overflow: "hidden", backgroundColor: "#111" }}>
+      {props.bgImageUrl ? (
         <img src={props.bgImageUrl} style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+      ) : (
+        <div style={{ display: "flex", position: "absolute", top: 0, left: 0, right: 0, bottom: 0, background: `linear-gradient(135deg, ${props.brandColors.primary} 0%, ${props.brandColors.secondary} 100%)` }} />
       )}
-      <Overlay opacity={0.6} />
-      <LogoBadge logoUrl={props.logoUrl} position="top-right" />
-      <div style={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", padding: "72px", position: "relative", flex: 1, gap: "24px" }}>
-        <div style={{ display: "flex", fontSize: "72px", fontWeight: 800, color: "#FFFFFF", lineHeight: 1.1, maxWidth: "90%" }}>
+      <Overlay opacity={0.7} direction="bottom" />
+      <LogoBadge logoUrl={props.logoUrl} position="top-left" />
+      {/* Content fills bottom 50% */}
+      <div style={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", position: "relative", flex: 1, padding: "0 72px 0" }}>
+        <div style={{ display: "flex", fontSize: "76px", fontWeight: 900, color: "#FFFFFF", lineHeight: 1.05 }}>
           {props.headline}
         </div>
-        <div style={{ display: "flex", fontSize: "32px", color: "rgba(255,255,255,0.85)", lineHeight: 1.4, maxWidth: "85%" }}>
+        <div style={{ display: "flex", fontSize: "30px", color: "rgba(255,255,255,0.9)", lineHeight: 1.4, marginTop: "20px" }}>
           {props.subhead}
         </div>
-        <div style={{ display: "flex", marginTop: "8px" }}>
-          <CTAButton text={props.cta} color={props.brandColors.primary} />
-        </div>
+      </div>
+      {/* Solid CTA bar at bottom */}
+      <div style={{ display: "flex", position: "relative", padding: "40px 72px 48px" }}>
+        <CTAButton text={props.cta} color={props.brandColors.primary} size="large" />
       </div>
     </div>
   ),
@@ -154,33 +172,36 @@ const heroHeadline: TemplateDefinition = {
 
 // ============================================================
 // TEMPLATE 2: Bold Statement
-// Single powerful line, minimal design
+// Brand color background with massive centered text
 // ============================================================
 const boldStatement: TemplateDefinition = {
   id: "bold-statement",
   name: "Bold Statement",
-  description: "Single powerful sentence on a clean background",
+  description: "Single powerful sentence on brand color background",
   categories: ["product", "service", "location", "digital", "personal_brand"],
   adCategories: ["emotional", "differentiator"],
   render: (props) => (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: props.width, height: props.height, backgroundColor: props.brandColors.primary, padding: "72px", textAlign: "center" as const, gap: "32px" }}>
-      <div style={{ display: "flex", fontSize: "74px", fontWeight: 800, color: "#FFFFFF", lineHeight: 1.15, textAlign: "center" as const, maxWidth: "90%" }}>
-        {props.headline}
+    <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, background: `linear-gradient(160deg, ${props.brandColors.primary} 0%, ${props.brandColors.secondary} 100%)` }}>
+      <LogoBadge logoUrl={props.logoUrl} position="top-left" />
+      {/* Centered content */}
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, padding: "72px", gap: "28px" }}>
+        <div style={{ display: "flex", fontSize: "80px", fontWeight: 900, color: "#FFFFFF", lineHeight: 1.1, textAlign: "center" as const }}>
+          {props.headline}
+        </div>
+        <AccentStripe color="rgba(255,255,255,0.3)" height="6px" />
+        <div style={{ display: "flex", fontSize: "30px", color: "rgba(255,255,255,0.85)", lineHeight: 1.5, textAlign: "center" as const }}>
+          {props.subhead}
+        </div>
       </div>
-      <div style={{ display: "flex", width: "100px", height: "5px", backgroundColor: "rgba(255,255,255,0.4)", borderRadius: "2px" }} />
-      <div style={{ display: "flex", fontSize: "32px", color: "rgba(255,255,255,0.8)", lineHeight: 1.5 }}>
-        {props.subhead}
-      </div>
-      <div style={{ display: "flex", marginTop: "12px" }}>
-        <CTAButton text={props.cta} color="#FFFFFF" textColor={props.brandColors.primary} />
-      </div>
+      {/* White CTA on dark background bar */}
+      <CTABar cta={props.cta} color="rgba(0,0,0,0.25)" textColor="#FFFFFF" />
     </div>
   ),
 };
 
 // ============================================================
 // TEMPLATE 3: Stat Callout
-// Large number + context text
+// Huge number on dark bg with brand accent
 // ============================================================
 const statCallout: TemplateDefinition = {
   id: "stat-callout",
@@ -189,26 +210,29 @@ const statCallout: TemplateDefinition = {
   categories: ["product", "service", "location", "digital", "personal_brand"],
   adCategories: ["social-proof", "trust"],
   render: (props) => {
-    // Extract number from headline (e.g. "500+ Patients Served" -> "500+")
     const match = props.headline.match(/[\d,]+[+%]?/);
     const stat = match ? match[0] : props.headline.split(" ")[0];
     const rest = match ? props.headline.replace(stat, "").trim() : props.headline.split(" ").slice(1).join(" ");
 
     return (
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: props.width, height: props.height, backgroundColor: props.brandColors.background, padding: "72px", gap: "20px" }}>
-        <div style={{ display: "flex", fontSize: "160px", fontWeight: 900, color: props.brandColors.primary, lineHeight: 1 }}>
-          {stat}
+      <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, backgroundColor: "#0D0D0D" }}>
+        {/* Top accent stripe */}
+        <AccentStripe color={props.brandColors.primary} height="10px" />
+        {/* Centered stat */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, padding: "72px", gap: "16px" }}>
+          <div style={{ display: "flex", fontSize: "200px", fontWeight: 900, color: props.brandColors.primary, lineHeight: 0.9 }}>
+            {stat}
+          </div>
+          <div style={{ display: "flex", fontSize: "48px", fontWeight: 800, color: "#FFFFFF", textAlign: "center" as const, marginTop: "8px" }}>
+            {rest}
+          </div>
+          <div style={{ display: "flex", width: "120px", height: "6px", backgroundColor: props.brandColors.primary, borderRadius: "3px", margin: "24px 0" }} />
+          <div style={{ display: "flex", fontSize: "28px", color: "rgba(255,255,255,0.7)", lineHeight: 1.5, textAlign: "center" as const, maxWidth: "85%" }}>
+            {props.subhead}
+          </div>
         </div>
-        <div style={{ display: "flex", fontSize: "42px", fontWeight: 700, color: props.brandColors.primary, opacity: 0.8, textAlign: "center" as const }}>
-          {rest}
-        </div>
-        <div style={{ display: "flex", width: "100px", height: "5px", backgroundColor: props.brandColors.accent, borderRadius: "2px", margin: "12px 0" }} />
-        <div style={{ display: "flex", fontSize: "28px", color: "#666666", lineHeight: 1.5, textAlign: "center" as const, maxWidth: "80%" }}>
-          {props.subhead}
-        </div>
-        <div style={{ display: "flex", marginTop: "16px" }}>
-          <CTAButton text={props.cta} color={props.brandColors.primary} />
-        </div>
+        {/* CTA bar */}
+        <CTABar cta={props.cta} color={props.brandColors.primary} textColor={props.brandColors.primary} />
       </div>
     );
   },
@@ -216,7 +240,7 @@ const statCallout: TemplateDefinition = {
 
 // ============================================================
 // TEMPLATE 4: Split Compare
-// Left/right panels — before/after, us vs them
+// Left/right panels — no emojis, bold text + color contrast
 // ============================================================
 const splitCompare: TemplateDefinition = {
   id: "split-compare",
@@ -230,29 +254,30 @@ const splitCompare: TemplateDefinition = {
     const right = parts[1]?.trim() || "After";
 
     return (
-      <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, backgroundColor: props.brandColors.background }}>
+      <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height }}>
+        {/* Two halves */}
         <div style={{ display: "flex", flex: 1 }}>
-          {/* Left - "bad" side */}
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, backgroundColor: "#2A2A2A", padding: "44px", gap: "20px" }}>
-            <div style={{ display: "flex", fontSize: "64px" }}>😤</div>
-            <div style={{ display: "flex", fontSize: "34px", fontWeight: 700, color: "#FF6B6B", textAlign: "center" as const }}>
+          {/* Left - "bad" side — dark, crossed out */}
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, backgroundColor: "#1A1A1A", padding: "48px", gap: "24px" }}>
+            <div style={{ display: "flex", fontSize: "24px", fontWeight: 700, color: "#FF4444", letterSpacing: "4px", textTransform: "uppercase" as const }}>THE OLD WAY</div>
+            <div style={{ display: "flex", fontSize: "44px", fontWeight: 800, color: "#FF6B6B", textAlign: "center" as const, textDecoration: "line-through", lineHeight: 1.2 }}>
               {left}
             </div>
           </div>
-          {/* Right - "good" side */}
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, backgroundColor: props.brandColors.primary, padding: "44px", gap: "20px" }}>
-            <div style={{ display: "flex", fontSize: "64px" }}>😊</div>
-            <div style={{ display: "flex", fontSize: "34px", fontWeight: 700, color: "#FFFFFF", textAlign: "center" as const }}>
+          {/* Right - "good" side — brand color, bold */}
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, backgroundColor: props.brandColors.primary, padding: "48px", gap: "24px" }}>
+            <div style={{ display: "flex", fontSize: "24px", fontWeight: 700, color: "rgba(255,255,255,0.8)", letterSpacing: "4px", textTransform: "uppercase" as const }}>THE BETTER WAY</div>
+            <div style={{ display: "flex", fontSize: "44px", fontWeight: 800, color: "#FFFFFF", textAlign: "center" as const, lineHeight: 1.2 }}>
               {right}
             </div>
           </div>
         </div>
-        {/* Bottom bar */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "28px 40px", backgroundColor: props.brandColors.background, gap: "20px" }}>
-          <div style={{ display: "flex", fontSize: "28px", color: "#666666", textAlign: "center" as const }}>
+        {/* Bottom bar with subhead + CTA */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "44px", backgroundColor: "#111", gap: "24px" }}>
+          <div style={{ display: "flex", fontSize: "26px", color: "rgba(255,255,255,0.8)", textAlign: "center" as const }}>
             {props.subhead}
           </div>
-          <CTAButton text={props.cta} color={props.brandColors.primary} />
+          <CTAButton text={props.cta} color={props.brandColors.primary} size="large" />
         </div>
       </div>
     );
@@ -261,47 +286,47 @@ const splitCompare: TemplateDefinition = {
 
 // ============================================================
 // TEMPLATE 5: Testimonial Card
-// Quote + name/attribution + star rating
+// Big quote on dark overlay with stars — full bleed photo
 // ============================================================
 const testimonialCard: TemplateDefinition = {
   id: "testimonial-card",
   name: "Testimonial Card",
-  description: "Customer quote with star rating and attribution",
+  description: "Customer quote with star rating on photo background",
   categories: ["product", "service", "location", "digital", "personal_brand"],
   adCategories: ["social-proof", "trust"],
   render: (props) => (
-    <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, position: "relative", overflow: "hidden" }}>
-      {props.bgImageUrl && (
+    <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, position: "relative", overflow: "hidden", backgroundColor: "#111" }}>
+      {props.bgImageUrl ? (
         <img src={props.bgImageUrl} style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+      ) : (
+        <div style={{ display: "flex", position: "absolute", top: 0, left: 0, right: 0, bottom: 0, background: `linear-gradient(160deg, #1a1a2e 0%, ${props.brandColors.primary} 100%)` }} />
       )}
-      <Overlay opacity={0.7} />
+      <Overlay opacity={0.75} direction="full" />
       <LogoBadge logoUrl={props.logoUrl} position="top-left" />
-      <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "60px 48px", position: "relative", flex: 1, gap: "32px" }}>
-        {/* Stars */}
-        <div style={{ display: "flex", gap: "4px" }}>
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} style={{ display: "flex", fontSize: "42px", color: "#FFD700" }}>★</div>
-          ))}
-        </div>
-        {/* Quote */}
-        <div style={{ display: "flex", fontSize: "44px", fontWeight: 600, color: "#FFFFFF", lineHeight: 1.4, textAlign: "center" as const, fontStyle: "italic" }}>
+      {/* Stars at top */}
+      <div style={{ display: "flex", position: "relative", justifyContent: "center", paddingTop: "160px", gap: "8px" }}>
+        {[1, 2, 3, 4, 5].map((i) => (
+          <div key={i} style={{ display: "flex", fontSize: "48px", color: "#FFD700" }}>★</div>
+        ))}
+      </div>
+      {/* Quote centered */}
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, padding: "48px 72px", position: "relative", gap: "32px" }}>
+        <div style={{ display: "flex", fontSize: "48px", fontWeight: 700, color: "#FFFFFF", lineHeight: 1.35, textAlign: "center" as const, fontStyle: "italic" }}>
           &ldquo;{props.headline}&rdquo;
         </div>
-        {/* Attribution */}
-        <div style={{ display: "flex", fontSize: "24px", color: "rgba(255,255,255,0.7)", letterSpacing: "1px" }}>
+        <div style={{ display: "flex", fontSize: "26px", color: "rgba(255,255,255,0.6)", letterSpacing: "2px", textTransform: "uppercase" as const }}>
           {props.subhead}
         </div>
-        <div style={{ display: "flex", marginTop: "8px" }}>
-          <CTAButton text={props.cta} color={props.brandColors.primary} />
-        </div>
       </div>
+      {/* CTA bar */}
+      <CTABar cta={props.cta} color={props.brandColors.primary} textColor={props.brandColors.primary} />
     </div>
   ),
 };
 
 // ============================================================
 // TEMPLATE 6: Problem Solution
-// Pain point struck through → benefit highlighted
+// Two stacked blocks — dark problem, bright solution
 // ============================================================
 const problemSolution: TemplateDefinition = {
   id: "problem-solution",
@@ -315,29 +340,28 @@ const problemSolution: TemplateDefinition = {
     const solution = parts[1]?.trim() || props.subhead;
 
     return (
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: props.width, height: props.height, backgroundColor: props.brandColors.background, padding: "72px", gap: "32px" }}>
-        {/* Problem - struck through */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
-          <div style={{ display: "flex", fontSize: "24px", color: "#999", letterSpacing: "2px", textTransform: "uppercase" as const, fontWeight: 600 }}>THE PROBLEM</div>
-          <div style={{ display: "flex", position: "relative" }}>
-            <div style={{ display: "flex", fontSize: "48px", fontWeight: 700, color: "#CC4444", textDecoration: "line-through", opacity: 0.6 }}>
-              {problem}
-            </div>
+      <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height }}>
+        {/* Problem — dark block, top half */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, backgroundColor: "#1A1A1A", padding: "72px", gap: "16px" }}>
+          <div style={{ display: "flex", fontSize: "22px", fontWeight: 700, color: "#FF4444", letterSpacing: "4px", textTransform: "uppercase" as const }}>THE PROBLEM</div>
+          <div style={{ display: "flex", fontSize: "56px", fontWeight: 800, color: "#FF6B6B", textDecoration: "line-through", textAlign: "center" as const, lineHeight: 1.15 }}>
+            {problem}
           </div>
         </div>
-        {/* Arrow */}
-        <div style={{ display: "flex", fontSize: "48px", color: props.brandColors.primary }}>↓</div>
-        {/* Solution */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
-          <div style={{ display: "flex", fontSize: "24px", color: props.brandColors.primary, letterSpacing: "2px", textTransform: "uppercase" as const, fontWeight: 600 }}>THE SOLUTION</div>
-          <div style={{ display: "flex", fontSize: "52px", fontWeight: 800, color: props.brandColors.primary, textAlign: "center" as const }}>
+        {/* Accent stripe */}
+        <AccentStripe color={props.brandColors.primary} height="10px" />
+        {/* Solution — brand color block, bottom half */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, backgroundColor: props.brandColors.primary, padding: "72px", gap: "16px" }}>
+          <div style={{ display: "flex", fontSize: "22px", fontWeight: 700, color: "rgba(255,255,255,0.7)", letterSpacing: "4px", textTransform: "uppercase" as const }}>THE SOLUTION</div>
+          <div style={{ display: "flex", fontSize: "60px", fontWeight: 900, color: "#FFFFFF", textAlign: "center" as const, lineHeight: 1.15 }}>
             {solution}
           </div>
+          <div style={{ display: "flex", fontSize: "24px", color: "rgba(255,255,255,0.8)", textAlign: "center" as const, marginTop: "8px" }}>
+            {props.subhead}
+          </div>
         </div>
-        <div style={{ display: "flex", fontSize: "28px", color: "#666", textAlign: "center" as const, maxWidth: "80%" }}>
-          {props.subhead}
-        </div>
-        <CTAButton text={props.cta} color={props.brandColors.primary} size="large" />
+        {/* CTA */}
+        <CTABar cta={props.cta} color="#111" textColor="#FFFFFF" />
       </div>
     );
   },
@@ -345,7 +369,7 @@ const problemSolution: TemplateDefinition = {
 
 // ============================================================
 // TEMPLATE 7: Three Step
-// Numbered process flow (how it works)
+// Dark bg, numbered steps with brand accent, CTA bar
 // ============================================================
 const threeStep: TemplateDefinition = {
   id: "three-step",
@@ -354,36 +378,35 @@ const threeStep: TemplateDefinition = {
   categories: ["product", "service", "location", "digital"],
   adCategories: ["conversion", "differentiator"],
   render: (props) => {
-    // Try to split subhead into 3 steps
     const steps = props.subhead.split(/[|;,]|\d\.\s/).filter(Boolean).slice(0, 3);
     const stepTexts = steps.length === 3 ? steps : ["Step one description", "Step two description", "Step three description"];
 
     return (
-      <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, backgroundColor: props.brandColors.background, padding: "72px", gap: "32px" }}>
+      <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, backgroundColor: "#0D0D0D" }}>
+        {/* Accent top */}
+        <AccentStripe color={props.brandColors.primary} height="10px" />
         {/* Header */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-          <div style={{ display: "flex", fontSize: "24px", color: props.brandColors.primary, letterSpacing: "2px", textTransform: "uppercase" as const, fontWeight: 700 }}>HOW IT WORKS</div>
-          <div style={{ display: "flex", fontSize: "54px", fontWeight: 800, color: props.brandColors.primary, lineHeight: 1.15 }}>
+        <div style={{ display: "flex", flexDirection: "column", padding: "64px 72px 0", gap: "12px" }}>
+          <div style={{ display: "flex", fontSize: "22px", color: props.brandColors.primary, letterSpacing: "4px", textTransform: "uppercase" as const, fontWeight: 700 }}>HOW IT WORKS</div>
+          <div style={{ display: "flex", fontSize: "60px", fontWeight: 900, color: "#FFFFFF", lineHeight: 1.1 }}>
             {props.headline}
           </div>
         </div>
         {/* Steps */}
-        <div style={{ display: "flex", flexDirection: "column", flex: 1, justifyContent: "center", gap: "32px" }}>
+        <div style={{ display: "flex", flexDirection: "column", flex: 1, justifyContent: "center", padding: "32px 72px", gap: "40px" }}>
           {stepTexts.map((step, i) => (
-            <div key={i} style={{ display: "flex", alignItems: "center", gap: "28px" }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "72px", height: "72px", borderRadius: "50%", backgroundColor: props.brandColors.primary, color: "#FFFFFF", fontSize: "34px", fontWeight: 800, flexShrink: 0 }}>
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: "32px" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "80px", height: "80px", borderRadius: "50%", backgroundColor: props.brandColors.primary, color: "#FFFFFF", fontSize: "38px", fontWeight: 900, flexShrink: 0 }}>
                 {i + 1}
               </div>
-              <div style={{ display: "flex", fontSize: "28px", color: "#444444", lineHeight: 1.4, flex: 1 }}>
+              <div style={{ display: "flex", fontSize: "30px", color: "rgba(255,255,255,0.9)", lineHeight: 1.35, flex: 1, fontWeight: 500 }}>
                 {step.trim()}
               </div>
             </div>
           ))}
         </div>
-        {/* CTA */}
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <CTAButton text={props.cta} color={props.brandColors.primary} size="large" />
-        </div>
+        {/* CTA bar */}
+        <CTABar cta={props.cta} color={props.brandColors.primary} textColor={props.brandColors.primary} />
       </div>
     );
   },
