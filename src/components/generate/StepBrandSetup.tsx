@@ -11,6 +11,14 @@ export interface UploadedAsset {
   type: string; // logo, product, portrait, facility, other
 }
 
+interface SavedBrand {
+  id: string;
+  name: string;
+  website: string;
+  business_type: string;
+  logo_url: string | null;
+}
+
 interface Props {
   brandName: string;
   setBrandName: (v: string) => void;
@@ -25,6 +33,8 @@ interface Props {
   onStart: () => void;
   savedCampaigns: SavedCampaign[];
   onLoadCampaign: (campaign: SavedCampaign) => void;
+  savedBrands?: SavedBrand[];
+  onLoadBrand?: (brand: SavedBrand) => void;
 }
 
 export function StepBrandSetup({
@@ -32,6 +42,7 @@ export function StepBrandSetup({
   product, setProduct, businessType, setBusinessType,
   uploadedAssets, setUploadedAssets,
   onStart, savedCampaigns, onLoadCampaign,
+  savedBrands, onLoadBrand,
 }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -198,6 +209,32 @@ export function StepBrandSetup({
           Analyze Brand
         </button>
       </div>
+
+      {/* Saved Brands — load instantly, skip scrape */}
+      {savedBrands && savedBrands.length > 0 && (
+        <div className="mt-10 max-w-2xl">
+          <h3 className="text-sm text-silver font-medium mb-4 tracking-wider uppercase">Your Brands</h3>
+          <p className="text-xs text-silver mb-3">Click to load — skips scraping, uses your saved brand identity.</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            {savedBrands.map((b) => (
+              <button key={b.id} onClick={() => onLoadBrand?.(b)}
+                className="flex items-center gap-3 p-4 rounded-xl glass hover:border-gold/20 transition-all text-left">
+                {b.logo_url ? (
+                  <Image src={b.logo_url} alt="" width={32} height={32} className="w-8 h-8 rounded-lg object-contain" unoptimized />
+                ) : (
+                  <div className="w-8 h-8 rounded-lg bg-graphite flex items-center justify-center text-xs text-gold font-bold">
+                    {b.name.charAt(0)}
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <p className="text-ivory font-medium text-sm truncate">{b.name}</p>
+                  <p className="text-[10px] text-silver capitalize">{b.business_type.replace("_", " ")}</p>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Saved Campaigns */}
       {savedCampaigns.length > 0 && (

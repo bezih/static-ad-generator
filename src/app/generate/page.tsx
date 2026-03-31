@@ -55,16 +55,89 @@ export default function GeneratePage() {
   // General
   const [error, setError] = useState("");
   const [savedCampaigns, setSavedCampaigns] = useState<SavedCampaign[]>([]);
+  const [savedBrandId, setSavedBrandId] = useState<string | null>(null);
+  const [savedBrands, setSavedBrands] = useState<{ id: string; name: string; website: string; business_type: string; logo_url: string | null }[]>([]);
 
-  // Load saved campaigns
+  // Load saved brands from Supabase on mount
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem("adforge_campaigns");
-      if (saved) setSavedCampaigns(JSON.parse(saved));
-    } catch {}
+    fetch("/api/brands")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.brands) setSavedBrands(data.brands);
+      })
+      .catch(() => {});
+
+    // Also load campaigns
+    fetch("/api/campaigns")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.campaigns) {
+          const mapped = data.campaigns.map((c: { id: string; brand_id: string; created_at: string; adforge_brands?: { name: string } }) => ({
+            brandName: c.adforge_brands?.name || "Unknown",
+            date: c.created_at,
+            ads: [], // ads loaded on demand
+            campaignId: c.id,
+          }));
+          setSavedCampaigns(mapped);
+        }
+      })
+      .catch(() => {});
   }, []);
 
-  const saveCampaign = useCallback((name: string, ads: GeneratedAd[]) => {
+  // Save brand to Supabase after scrape
+  const saveBrandToDb = useCallback(async (name: string, dna: BrandDna, bType: string, logo: string | null, assets: ClassifiedAsset[]) => {
+    try {
+      const res = await fetch("/api/brands", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          website: brandUrl,
+          product,
+          businessType: bType,
+          brandDna: dna,
+          logoUrl: logo,
+          colors: dna.visualIdentity,
+          assets: assets.map((a) => ({ url: a.url, type: a.type, usability: a.usability })),
+        }),
+      });
+      const data = await res.json();
+      if (data.brandId) setSavedBrandId(data.brandId);
+    } catch {}
+  }, [brandUrl, product]);
+
+  // Save campaign to Supabase after generation
+  const saveCampaign = useCallback(async (name: string, ads: GeneratedAd[]) => {
+    if (savedBrandId && ads.length > 0) {
+      try {
+        await fetch("/api/campaigns", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            brandId: savedBrandId,
+            agentFindings: allFindings,
+            userNotes,
+            formats: selectedFormats,
+            ads: ads.map((a) => ({
+              briefId: a.briefId,
+              templateId: a.templateId,
+              headline: a.headline,
+              subhead: a.subhead,
+              cta: a.cta,
+              category: a.category,
+              imageUrl: a.imageUrl,
+              bgImageUrl: a.bgImageUrl,
+              primaryAssetUrl: a.primaryAssetUrl,
+              format: a.format,
+              qualityScore: a.qualityScore,
+              qualityPass: a.qualityPass,
+              compliance: a.compliance,
+            })),
+          }),
+        });
+      } catch {}
+    }
+    // Also keep localStorage as fallback
     try {
       const saved = localStorage.getItem("adforge_campaigns");
       const campaigns = saved ? JSON.parse(saved) : [];
@@ -72,11 +145,9 @@ export default function GeneratePage() {
       const idx = campaigns.findIndex((c: SavedCampaign) => c.brandName === name);
       if (idx >= 0) campaigns[idx] = campaign;
       else campaigns.unshift(campaign);
-      const trimmed = campaigns.slice(0, 10);
-      localStorage.setItem("adforge_campaigns", JSON.stringify(trimmed));
-      setSavedCampaigns(trimmed);
+      localStorage.setItem("adforge_campaigns", JSON.stringify(campaigns.slice(0, 10)));
     } catch {}
-  }, []);
+  }, [savedBrandId, allFindings, userNotes, selectedFormats]);
 
   // ── Step 1 → 2: Scrape website ──
   const startScrape = async () => {
@@ -156,6 +227,8 @@ export default function GeneratePage() {
 
   // ── Step 2 → 3: Confirm DNA, start research ──
   const confirmDna = () => {
+    // Save brand to Supabase when user confirms DNA
+    saveBrandToDb(brandName, brandDna!, businessType, logoUrl, classifiedAssets);
     runAgents(brandDna!);
   };
 
@@ -527,6 +600,31 @@ export default function GeneratePage() {
                 onStart={startScrape}
                 savedCampaigns={savedCampaigns}
                 onLoadCampaign={(c) => { setBrandName(c.brandName); setGenerated(c.ads); setStep("done"); }}
+                savedBrands={savedBrands}
+                onLoadBrand={async (brand) => {
+                  // Load full brand from Supabase
+                  try {
+                    const res = await fetch(`/api/brands?id=${brand.id}`);
+                    const data = await res.json();
+                    if (data.brand) {
+                      const b = data.brand;
+                      setBrandName(b.name);
+                      setBrandUrl(b.website || "");
+                      setProduct(b.product || "");
+                      setBusinessType(b.business_type || "service");
+                      setBrandDna(b.brand_dna);
+                      setLogoUrl(b.logo_url);
+                      setSavedBrandId(b.id);
+                      if (b.adforge_assets) {
+                        setClassifiedAssets(b.adforge_assets.map((a: { url: string; asset_type: string; usability: number }) => ({
+                          url: a.url, type: a.asset_type, usability: a.usability,
+                        })));
+                      }
+                      // Skip scrape — go straight to review
+                      setStep("review");
+                    }
+                  } catch {}
+                }}
               />
             )}
 
