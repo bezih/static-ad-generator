@@ -47,6 +47,26 @@ function Overlay({ opacity = 0.55 }: { opacity?: number }) {
 }
 
 // Helper: CTA button
+// Helper: brand logo badge — shown in corner or footer of templates
+function LogoBadge({ logoUrl, position = "top-right" }: { logoUrl?: string; position?: "top-left" | "top-right" | "bottom-left" | "bottom-right" }) {
+  if (!logoUrl) return null;
+  const posStyle: Record<string, string | number> = {
+    position: "absolute",
+    display: "flex",
+    zIndex: 10,
+  };
+  if (position.includes("top")) posStyle.top = "16px";
+  if (position.includes("bottom")) posStyle.bottom = "16px";
+  if (position.includes("left")) posStyle.left = "16px";
+  if (position.includes("right")) posStyle.right = "16px";
+
+  return (
+    <div style={posStyle}>
+      <img src={logoUrl} style={{ height: "36px", objectFit: "contain", borderRadius: "6px" }} />
+    </div>
+  );
+}
+
 function CTAButton({
   text,
   color,
@@ -116,6 +136,7 @@ const heroHeadline: TemplateDefinition = {
         <img src={props.bgImageUrl} style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", objectFit: "cover" }} />
       )}
       <Overlay opacity={0.6} />
+      <LogoBadge logoUrl={props.logoUrl} position="top-right" />
       <div style={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", padding: "48px", position: "relative", flex: 1, gap: "16px" }}>
         <div style={{ display: "flex", fontSize: "52px", fontWeight: 800, color: "#FFFFFF", lineHeight: 1.1, maxWidth: "90%" }}>
           {props.headline}
@@ -254,6 +275,7 @@ const testimonialCard: TemplateDefinition = {
         <img src={props.bgImageUrl} style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", objectFit: "cover" }} />
       )}
       <Overlay opacity={0.7} />
+      <LogoBadge logoUrl={props.logoUrl} position="top-left" />
       <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "60px 48px", position: "relative", flex: 1, gap: "24px" }}>
         {/* Stars */}
         <div style={{ display: "flex", gap: "4px" }}>
@@ -532,6 +554,10 @@ const offerBanner: TemplateDefinition = {
     <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, backgroundColor: props.brandColors.primary, padding: "0" }}>
       {/* Top section */}
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, padding: "48px", gap: "20px" }}>
+        {/* Logo */}
+        {props.logoUrl && (
+          <img src={props.logoUrl} style={{ height: "32px", objectFit: "contain", marginBottom: "4px" }} />
+        )}
         {/* Urgency badge */}
         <div style={{ display: "flex", padding: "8px 24px", backgroundColor: "rgba(255,255,255,0.2)", borderRadius: "24px" }}>
           <span style={{ color: "#FFFFFF", fontSize: "14px", fontWeight: 700, letterSpacing: "2px", textTransform: "uppercase" as const }}>LIMITED TIME</span>
@@ -658,8 +684,11 @@ const lifestyleBlend: TemplateDefinition = {
       )}
       <Overlay opacity={0.5} />
       {/* Top brand bar */}
-      <div style={{ display: "flex", position: "relative", padding: "24px 36px", justifyContent: "flex-end" }}>
-        <div style={{ display: "flex", padding: "6px 16px", backgroundColor: "rgba(255,255,255,0.15)", borderRadius: "8px", backdropFilter: "blur(8px)" }}>
+      <div style={{ display: "flex", position: "relative", padding: "24px 36px", justifyContent: "space-between", alignItems: "center" }}>
+        {props.logoUrl ? (
+          <img src={props.logoUrl} style={{ height: "32px", objectFit: "contain" }} />
+        ) : <div />}
+        <div style={{ display: "flex", padding: "6px 16px", backgroundColor: "rgba(255,255,255,0.15)", borderRadius: "8px" }}>
           <span style={{ color: "#FFFFFF", fontSize: "12px", fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase" as const }}>AD</span>
         </div>
       </div>

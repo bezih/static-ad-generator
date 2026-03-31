@@ -14,6 +14,7 @@ export async function POST(request: NextRequest) {
     // Fetch the website HTML
     let html = "";
     let productImages: string[] = [];
+    let logoImages: string[] = [];
     try {
       const res = await fetch(url, {
         headers: { "User-Agent": "Mozilla/5.0 (compatible; AdForge/1.0)" },
@@ -58,6 +59,19 @@ export async function POST(request: NextRequest) {
       }
 
       productImages = [...new Set(allImages)].slice(0, 10);
+
+      // Extract logo separately — look for images with "logo" in URL or <link> tags
+      const logoRegex = /<(?:img|link)[^>]+(?:src|href)=["']([^"']*logo[^"']*)["'][^>]*/gi;
+      let logoMatch;
+      while ((logoMatch = logoRegex.exec(html)) !== null) {
+        let logoImgUrl = logoMatch[1];
+        if (logoImgUrl.startsWith("//")) logoImgUrl = "https:" + logoImgUrl;
+        else if (logoImgUrl.startsWith("/")) logoImgUrl = baseUrl + logoImgUrl;
+        else if (!logoImgUrl.startsWith("http")) logoImgUrl = baseUrl + "/" + logoImgUrl;
+        if (!logoImgUrl.includes("data:image") && !logoImgUrl.includes("favicon")) {
+          logoImages.push(logoImgUrl);
+        }
+      }
     } catch {
       // If fetch fails, proceed without HTML
       html = "";
@@ -161,6 +175,7 @@ Return ONLY the JSON object, no markdown formatting or explanation.`,
     return NextResponse.json({
       brandDna,
       productImages,
+      logoUrl: logoImages.length > 0 ? logoImages[0] : null,
       hexColors,
       businessType: brandDna.businessType || userBusinessType || "service",
     });

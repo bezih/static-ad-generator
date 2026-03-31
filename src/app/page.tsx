@@ -42,10 +42,10 @@ const agents = [
 ];
 
 const steps = [
-  { num: "01", title: "Enter Your Brand", desc: "Name, website, product. That's all we need." },
-  { num: "02", title: "Agents Research", desc: "5 AI agents analyze your market, competitors, and audience pain points." },
-  { num: "03", title: "Prompts Generated", desc: "40 conversion-optimized ad prompts tailored to your brand DNA." },
-  { num: "04", title: "Images Created", desc: "FAL AI generates production-ready static ads in seconds." },
+  { num: "01", title: "Analyze Your Brand", desc: "Enter your business. We scrape your site, detect colors, classify assets, and build your Brand DNA." },
+  { num: "02", title: "Review & Steer", desc: "Edit your brand DNA, reclassify images, and guide 5 research agents with your own notes." },
+  { num: "03", title: "Pick Your Ads", desc: "Choose from 20+ creative briefs with editable headlines, A/B variants, and multiple formats." },
+  { num: "04", title: "Render & Customize", desc: "Pixel-perfect ads rendered with real fonts. Edit copy, swap backgrounds, download as ZIP." },
 ];
 
 export default function Home() {
@@ -86,9 +86,10 @@ export default function Home() {
               variants={fadeUp}
               className="mt-8 text-xl text-silver max-w-2xl leading-relaxed"
             >
-              Five AI research agents analyze your competitors, find customer
-              pain points, and craft conversion-optimized ad copy. Then we
-              generate the images. For any brand. In minutes.
+              Five AI agents research your market. Then we render
+              pixel-perfect ads with real fonts, your brand colors, and
+              professional layouts — not AI-generated noise. For any business.
+              Clinics, products, SaaS, restaurants. Customize everything.
             </motion.p>
 
             <motion.div custom={3} variants={fadeUp} className="flex gap-4 mt-12">
@@ -179,7 +180,7 @@ export default function Home() {
               How It Works
             </p>
             <h2 className="font-display text-4xl md:text-5xl text-ivory leading-tight">
-              Four phases. Zero effort.
+              Four steps. Full control.
             </h2>
           </motion.div>
 
@@ -228,7 +229,7 @@ export default function Home() {
               Ready to forge your ads?
             </h2>
             <p className="relative text-silver text-lg mb-10 max-w-lg mx-auto">
-              Enter your brand. Let the agents work. Download your campaign.
+              Any business. Professional layouts. Real fonts. Your brand.
             </p>
             <Link
               href="/generate"

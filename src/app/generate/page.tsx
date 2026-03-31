@@ -29,6 +29,7 @@ export default function GeneratePage() {
   // Step 2: Brand DNA
   const [brandDna, setBrandDna] = useState<BrandDna | null>(null);
   const [productImages, setProductImages] = useState<string[]>([]);
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [classifiedAssets, setClassifiedAssets] = useState<ClassifiedAsset[]>([]);
   const [processedAssets, setProcessedAssets] = useState<Record<string, string>>({});
 
@@ -99,6 +100,7 @@ export default function GeneratePage() {
 
       setBrandDna(data.brandDna);
       setProductImages(data.productImages || []);
+      if (data.logoUrl) setLogoUrl(data.logoUrl);
       if (data.businessType) setBusinessType(data.businessType);
 
       // Process assets in parallel
@@ -268,6 +270,7 @@ export default function GeneratePage() {
               cta: brief.cta,
               bgImageUrl,
               primaryAssetUrl,
+              logoUrl,
               brandColors: brandDna ? {
                 primary: brandDna.visualIdentity.primaryColor,
                 secondary: brandDna.visualIdentity.secondaryColor,
@@ -422,6 +425,7 @@ export default function GeneratePage() {
     setBusinessType("service");
     setBrandDna(null);
     setProductImages([]);
+    setLogoUrl(null);
     setClassifiedAssets([]);
     setProcessedAssets({});
     setAgents(AGENTS.map((a) => ({ ...a })));
