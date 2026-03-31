@@ -48,10 +48,16 @@ Score each dimension 1-10:
 
 Also flag any issues: garbled text, wrong colors, cluttered layout, missing CTA, etc.
 
+PLATFORM COMPLIANCE — also check:
+7. META_TEXT_RATIO: Does text cover less than 20% of the image area? (Meta/Facebook rejects ads with too much text overlay)
+8. PROHIBITED_CONTENT: Any misleading claims, before/after medical imagery without disclaimers, weapons, adult content, or discriminatory messaging?
+9. GOOGLE_DISPLAY_SAFE: Is it suitable for Google Display Network? (no flashing, no misleading UI elements like fake buttons/alerts, no excessive text)
+
 Return ONLY JSON:
-{"scores": {"text_legibility": 8, "visual_hierarchy": 7, "brand_consistency": 9, "cta_prominence": 7, "overall_conversion": 8, "professional_quality": 8}, "overall": 7.8, "pass": true, "issues": [], "suggestion": ""}
+{"scores": {"text_legibility": 8, "visual_hierarchy": 7, "brand_consistency": 9, "cta_prominence": 7, "overall_conversion": 8, "professional_quality": 8}, "overall": 7.8, "pass": true, "issues": [], "suggestion": "", "compliance": {"meta_approved": true, "google_approved": true, "meta_text_ratio_ok": true, "compliance_notes": []}}
 
 Set "pass" to true if overall >= 7, false otherwise.
+Set compliance fields independently — an ad can score well but still have compliance issues.
 If pass is false, include a brief "suggestion" for what to regenerate.`,
             },
           ],

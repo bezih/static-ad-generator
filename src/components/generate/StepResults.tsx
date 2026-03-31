@@ -152,12 +152,28 @@ export function StepResults({ brandName, generated, onEditAd, onNewCampaign, onR
             <div className="relative aspect-[4/5] overflow-hidden cursor-pointer" onClick={() => setPreviewAd(ad)}>
               <Image src={ad.imageUrl} alt={ad.headline} fill className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" unoptimized />
-              {/* Quality score badge */}
+              {/* Quality score + compliance badges */}
               {ad.qualityScore !== undefined && (
-                <div className={`absolute top-3 left-3 px-2 py-1 rounded-lg text-xs font-bold ${
-                  ad.qualityPass ? "bg-emerald/90 text-white" : "bg-amber/90 text-obsidian"
-                }`}>
-                  {ad.qualityScore.toFixed(1)} {ad.qualityPass ? "✓" : "⚠"}
+                <div className="absolute top-3 left-3 flex flex-col gap-1">
+                  <div className={`px-2 py-1 rounded-lg text-xs font-bold ${
+                    ad.qualityPass ? "bg-emerald/90 text-white" : "bg-amber/90 text-obsidian"
+                  }`}>
+                    {ad.qualityScore.toFixed(1)} {ad.qualityPass ? "✓" : "⚠"}
+                  </div>
+                  {ad.compliance && (
+                    <div className="flex gap-1">
+                      <div className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
+                        ad.compliance.meta_approved ? "bg-blue-500/90 text-white" : "bg-red-500/80 text-white"
+                      }`}>
+                        META {ad.compliance.meta_approved ? "✓" : "✗"}
+                      </div>
+                      <div className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
+                        ad.compliance.google_approved ? "bg-blue-500/90 text-white" : "bg-red-500/80 text-white"
+                      }`}>
+                        GOOG {ad.compliance.google_approved ? "✓" : "✗"}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
               {/* Hover overlay with actions */}

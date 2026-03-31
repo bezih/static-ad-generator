@@ -87,6 +87,12 @@ export interface GeneratedAd {
   qualityScore?: number; // 1-10 from Claude Vision quality gate
   qualityPass?: boolean;
   qualityIssues?: string[];
+  compliance?: {
+    meta_approved: boolean;
+    google_approved: boolean;
+    meta_text_ratio_ok: boolean;
+    compliance_notes: string[];
+  };
 }
 
 export interface SavedCampaign {

@@ -322,7 +322,7 @@ export default function GeneratePage() {
                 setGenerated((prev) =>
                   prev.map((a) =>
                     a.briefId === brief.id && a.format === format
-                      ? { ...a, qualityScore: qData.overall, qualityPass: qData.pass, qualityIssues: qData.issues }
+                      ? { ...a, qualityScore: qData.overall, qualityPass: qData.pass, qualityIssues: qData.issues, compliance: qData.compliance }
                       : a
                   )
                 );
