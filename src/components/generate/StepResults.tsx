@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import JSZip from "jszip";
 import { GeneratedAd } from "@/lib/types";
 import { AD_FORMATS, AdFormat } from "@/lib/templates";
 
@@ -18,6 +19,7 @@ export function StepResults({ brandName, generated, onEditAd, onNewCampaign, onR
   const [previewAd, setPreviewAd] = useState<GeneratedAd | null>(null);
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const [filterFormat, setFilterFormat] = useState<string>("all");
+  const [isZipping, setIsZipping] = useState(false);
 
   const categories = ["all", ...new Set(generated.map((a) => a.category))];
   const formats = ["all", ...new Set(generated.map((a) => a.format))];
@@ -44,9 +46,36 @@ export function StepResults({ brandName, generated, onEditAd, onNewCampaign, onR
   };
 
   const downloadAll = async () => {
-    for (const ad of filtered) {
-      await downloadAd(ad);
-      await new Promise((r) => setTimeout(r, 300));
+    if (filtered.length === 0) return;
+    setIsZipping(true);
+    try {
+      const zip = new JSZip();
+      const folder = zip.folder(brandName.replace(/\s+/g, "-").toLowerCase()) || zip;
+
+      await Promise.all(
+        filtered.map(async (ad) => {
+          try {
+            const res = await fetch(ad.imageUrl);
+            const blob = await res.blob();
+            const filename = `${ad.category}-${ad.templateName}-${ad.format}.png`;
+            folder.file(filename, blob);
+          } catch {}
+        })
+      );
+
+      const zipBlob = await zip.generateAsync({ type: "blob" });
+      const url = URL.createObjectURL(zipBlob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${brandName.replace(/\s+/g, "-").toLowerCase()}-ads.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("ZIP export failed:", err);
+    } finally {
+      setIsZipping(false);
     }
   };
 
@@ -58,12 +87,24 @@ export function StepResults({ brandName, generated, onEditAd, onNewCampaign, onR
           <p className="text-silver">{generated.length} ads generated for <span className="text-gold">{brandName}</span></p>
         </div>
         <div className="flex gap-3">
-          <button onClick={downloadAll}
-            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-gold to-gold-dark text-obsidian font-semibold text-sm hover:shadow-[0_0_30px_-8px_rgba(201,168,76,0.4)] transition-all">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-            Download All ({filtered.length})
+          <button onClick={downloadAll} disabled={isZipping}
+            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-gold to-gold-dark text-obsidian font-semibold text-sm hover:shadow-[0_0_30px_-8px_rgba(201,168,76,0.4)] transition-all disabled:opacity-60">
+            {isZipping ? (
+              <>
+                <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+                Zipping...
+              </>
+            ) : (
+              <>
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download ZIP ({filtered.length})
+              </>
+            )}
           </button>
           <button onClick={onNewCampaign}
             className="px-6 py-3 rounded-xl text-sm font-medium text-silver border border-ivory/10 hover:bg-ivory/5 transition-colors">
@@ -111,6 +152,14 @@ export function StepResults({ brandName, generated, onEditAd, onNewCampaign, onR
             <div className="relative aspect-[4/5] overflow-hidden cursor-pointer" onClick={() => setPreviewAd(ad)}>
               <Image src={ad.imageUrl} alt={ad.headline} fill className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" unoptimized />
+              {/* Quality score badge */}
+              {ad.qualityScore !== undefined && (
+                <div className={`absolute top-3 left-3 px-2 py-1 rounded-lg text-xs font-bold ${
+                  ad.qualityPass ? "bg-emerald/90 text-white" : "bg-amber/90 text-obsidian"
+                }`}>
+                  {ad.qualityScore.toFixed(1)} {ad.qualityPass ? "✓" : "⚠"}
+                </div>
+              )}
               {/* Hover overlay with actions */}
               <div className="absolute inset-0 bg-obsidian/0 group-hover:bg-obsidian/40 transition-all flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100">
                 <button onClick={(e) => { e.stopPropagation(); onEditAd(ad); }}

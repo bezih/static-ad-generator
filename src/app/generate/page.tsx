@@ -152,7 +152,7 @@ export default function GeneratePage() {
           const res = await fetch("/api/agent", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ agentType: agentId, brandDna: dna }),
+            body: JSON.stringify({ agentType: agentId, brandDna: dna, businessType }),
           });
           const data = await res.json();
           if (data.error) throw new Error(data.error);
@@ -294,9 +294,37 @@ export default function GeneratePage() {
               bgImageUrl,
               primaryAssetUrl,
               format,
+              qualityPass: true, // optimistic default
             };
 
+            // Run quality gate in background — update score when ready
             setGenerated((prev) => [...prev, newAd]);
+
+            // Non-blocking quality check
+            fetch("/api/quality-check", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                imageUrl,
+                headline: brief.headline,
+                category: brief.category,
+                brandColors: brandDna ? {
+                  primary: brandDna.visualIdentity.primaryColor,
+                  secondary: brandDna.visualIdentity.secondaryColor,
+                } : undefined,
+              }),
+            })
+              .then((r) => r.json())
+              .then((qData) => {
+                setGenerated((prev) =>
+                  prev.map((a) =>
+                    a.briefId === brief.id && a.format === format
+                      ? { ...a, qualityScore: qData.overall, qualityPass: qData.pass, qualityIssues: qData.issues }
+                      : a
+                  )
+                );
+              })
+              .catch(() => {}); // never block generation on quality check failure
           }
         } catch (err) {
           console.error(`Failed to render: ${brief.templateId} ${format}`, err);

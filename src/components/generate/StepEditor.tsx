@@ -20,15 +20,33 @@ export function StepEditor({ ad, brandColors, onSave, onRegenerate, onBack }: Pr
   const [cta, setCta] = useState(ad.cta);
   const [format, setFormat] = useState<AdFormat>(ad.format as AdFormat);
   const [isRegenerating, setIsRegenerating] = useState(false);
+  const [isSwappingBg, setIsSwappingBg] = useState(false);
+  const [currentBgUrl, setCurrentBgUrl] = useState(ad.bgImageUrl);
+  const [bgPrompt, setBgPrompt] = useState("");
 
   const handleSave = () => {
-    onSave({ ...ad, headline, subhead, cta, format });
+    onSave({ ...ad, headline, subhead, cta, format, bgImageUrl: currentBgUrl });
   };
 
   const handleRegenerate = async () => {
     setIsRegenerating(true);
-    await onRegenerate({ ...ad, headline, subhead, cta, format });
+    await onRegenerate({ ...ad, headline, subhead, cta, format, bgImageUrl: currentBgUrl });
     setIsRegenerating(false);
+  };
+
+  const handleSwapBackground = async () => {
+    if (!bgPrompt.trim()) return;
+    setIsSwappingBg(true);
+    try {
+      const res = await fetch("/api/background", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: bgPrompt, aspectRatio: "4:5" }),
+      });
+      const data = await res.json();
+      if (data.imageUrl) setCurrentBgUrl(data.imageUrl);
+    } catch {}
+    setIsSwappingBg(false);
   };
 
   return (
@@ -104,6 +122,37 @@ export function StepEditor({ ad, brandColors, onSave, onRegenerate, onBack }: Pr
                   <span className="text-[10px] text-silver capitalize">{key}</span>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Background swap */}
+          <div className="glass rounded-2xl p-6">
+            <h3 className="text-gold font-semibold text-sm tracking-wider uppercase mb-4">Swap Background</h3>
+            {currentBgUrl && (
+              <div className="mb-3 rounded-xl overflow-hidden aspect-video relative">
+                <Image src={currentBgUrl} alt="Current background" fill className="object-cover" unoptimized sizes="300px" />
+              </div>
+            )}
+            <div className="flex gap-2">
+              <input
+                value={bgPrompt}
+                onChange={(e) => setBgPrompt(e.target.value)}
+                placeholder="Describe a new background scene..."
+                className="flex-1 px-3 py-2 rounded-xl bg-obsidian border border-ash text-ivory text-sm focus:outline-none focus:border-gold/30 transition-all"
+                onKeyDown={(e) => e.key === "Enter" && handleSwapBackground()}
+              />
+              <button
+                onClick={handleSwapBackground}
+                disabled={isSwappingBg || !bgPrompt.trim()}
+                className="px-4 py-2 rounded-xl bg-gold text-obsidian text-xs font-semibold disabled:opacity-50 transition-all"
+              >
+                {isSwappingBg ? (
+                  <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                ) : "Generate"}
+              </button>
             </div>
           </div>
 

@@ -680,6 +680,309 @@ const lifestyleBlend: TemplateDefinition = {
 };
 
 // ============================================================
+// TEMPLATE 16: Myth Buster
+// Common myth struck through, truth revealed
+// ============================================================
+const mythBuster: TemplateDefinition = {
+  id: "myth-buster",
+  name: "Myth Buster",
+  description: "Strike through a common myth, reveal the truth",
+  categories: ["product", "service", "digital", "location"],
+  adCategories: ["competitive", "conversion"],
+  render: (props) => {
+    const parts = props.headline.split(/→|➜|TRUTH:/i);
+    const myth = parts[0]?.trim() || props.headline;
+    const truth = parts[1]?.trim() || props.subhead;
+
+    return (
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: props.width, height: props.height, backgroundColor: props.brandColors.background, padding: "60px", gap: "28px" }}>
+        <div style={{ display: "flex", fontSize: "14px", fontWeight: 700, color: "#CC4444", letterSpacing: "3px", textTransform: "uppercase" as const }}>MYTH</div>
+        <div style={{ display: "flex", fontSize: "30px", fontWeight: 700, color: "#999", textDecoration: "line-through", textAlign: "center" as const, lineHeight: 1.3 }}>
+          {myth}
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          <div style={{ display: "flex", flex: 1, height: "1px", backgroundColor: "#E0E0E0" }} />
+          <div style={{ display: "flex", fontSize: "22px" }}>⚡</div>
+          <div style={{ display: "flex", flex: 1, height: "1px", backgroundColor: "#E0E0E0" }} />
+        </div>
+        <div style={{ display: "flex", fontSize: "14px", fontWeight: 700, color: props.brandColors.primary, letterSpacing: "3px", textTransform: "uppercase" as const }}>REALITY</div>
+        <div style={{ display: "flex", fontSize: "34px", fontWeight: 800, color: props.brandColors.primary, textAlign: "center" as const, lineHeight: 1.2 }}>
+          {truth}
+        </div>
+        <CTAButton text={props.cta} color={props.brandColors.primary} size="large" />
+      </div>
+    );
+  },
+};
+
+// ============================================================
+// TEMPLATE 17: Checklist
+// Bulleted benefits list — "Everything you need"
+// ============================================================
+const checklist: TemplateDefinition = {
+  id: "checklist",
+  name: "Checklist",
+  description: "List of benefits with checkmarks — 'Everything included'",
+  categories: ["product", "service", "digital", "location"],
+  adCategories: ["differentiator", "conversion"],
+  render: (props) => {
+    const items = props.subhead.split(/[|;]/).filter(Boolean).slice(0, 5);
+    const listItems = items.length >= 3 ? items : ["Benefit one", "Benefit two", "Benefit three", "Benefit four"];
+
+    return (
+      <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, backgroundColor: props.brandColors.background, padding: "48px", gap: "20px" }}>
+        <div style={{ display: "flex", fontSize: "16px", fontWeight: 700, color: props.brandColors.primary, letterSpacing: "2px", textTransform: "uppercase" as const }}>EVERYTHING INCLUDED</div>
+        <div style={{ display: "flex", fontSize: "38px", fontWeight: 800, color: props.brandColors.primary, lineHeight: 1.15 }}>
+          {props.headline}
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", flex: 1, justifyContent: "center", gap: "16px" }}>
+          {listItems.map((item, i) => (
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "28px", height: "28px", borderRadius: "50%", backgroundColor: props.brandColors.primary, flexShrink: 0 }}>
+                <span style={{ color: "#FFFFFF", fontSize: "14px", fontWeight: 800 }}>✓</span>
+              </div>
+              <span style={{ fontSize: "18px", color: "#333", fontWeight: 500 }}>{item.trim()}</span>
+            </div>
+          ))}
+        </div>
+        <CTAButton text={props.cta} color={props.brandColors.primary} size="large" />
+      </div>
+    );
+  },
+};
+
+// ============================================================
+// TEMPLATE 18: Countdown / Urgency
+// Limited time with visual urgency
+// ============================================================
+const countdown: TemplateDefinition = {
+  id: "countdown",
+  name: "Countdown Urgency",
+  description: "Limited time offer with strong urgency signals",
+  categories: ["product", "service", "location", "digital"],
+  adCategories: ["conversion"],
+  render: (props) => (
+    <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, backgroundColor: "#1A1A1A", padding: "0" }}>
+      {/* Top urgency bar */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "16px", backgroundColor: "#CC2222", gap: "8px" }}>
+        <span style={{ fontSize: "20px" }}>🔥</span>
+        <span style={{ color: "#FFFFFF", fontSize: "14px", fontWeight: 800, letterSpacing: "2px", textTransform: "uppercase" as const }}>LIMITED TIME OFFER</span>
+        <span style={{ fontSize: "20px" }}>🔥</span>
+      </div>
+      {/* Main content */}
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, padding: "48px", gap: "24px" }}>
+        <div style={{ display: "flex", fontSize: "52px", fontWeight: 900, color: "#FFFFFF", textAlign: "center" as const, lineHeight: 1.1 }}>
+          {props.headline}
+        </div>
+        <div style={{ display: "flex", fontSize: "20px", color: "rgba(255,255,255,0.75)", textAlign: "center" as const, lineHeight: 1.4 }}>
+          {props.subhead}
+        </div>
+        <div style={{ display: "flex", gap: "12px", marginTop: "8px" }}>
+          {["Hours", "Minutes", "Seconds"].map((unit, i) => (
+            <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "4px" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "72px", height: "72px", backgroundColor: props.brandColors.primary, borderRadius: "12px" }}>
+                <span style={{ color: "#FFFFFF", fontSize: "28px", fontWeight: 900 }}>
+                  {i === 0 ? "24" : i === 1 ? "00" : "00"}
+                </span>
+              </div>
+              <span style={{ color: "rgba(255,255,255,0.5)", fontSize: "11px", textTransform: "uppercase" as const, letterSpacing: "1px" }}>{unit}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div style={{ display: "flex", justifyContent: "center", padding: "32px" }}>
+        <CTAButton text={props.cta} color={props.brandColors.primary} size="large" />
+      </div>
+    </div>
+  ),
+};
+
+// ============================================================
+// TEMPLATE 19: FAQ / Objection Handler
+// Answer the #1 objection head-on
+// ============================================================
+const faqObjection: TemplateDefinition = {
+  id: "faq-objection",
+  name: "Objection Handler",
+  description: "Address the #1 customer objection directly",
+  categories: ["product", "service", "digital", "location", "personal_brand"],
+  adCategories: ["conversion", "trust"],
+  render: (props) => (
+    <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, backgroundColor: props.brandColors.background, padding: "60px", gap: "24px" }}>
+      {/* Q */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "12px", padding: "28px", backgroundColor: "rgba(0,0,0,0.04)", borderRadius: "20px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "36px", height: "36px", borderRadius: "50%", backgroundColor: "#E0E0E0", flexShrink: 0 }}>
+            <span style={{ color: "#555", fontSize: "18px", fontWeight: 800 }}>Q</span>
+          </div>
+          <span style={{ fontSize: "20px", fontWeight: 700, color: "#333" }}>{props.headline}</span>
+        </div>
+      </div>
+      {/* A */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "12px", padding: "28px", backgroundColor: props.brandColors.primary, borderRadius: "20px", flex: 1 }}>
+        <div style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "36px", height: "36px", borderRadius: "50%", backgroundColor: "rgba(255,255,255,0.25)", flexShrink: 0 }}>
+            <span style={{ color: "#FFFFFF", fontSize: "18px", fontWeight: 800 }}>A</span>
+          </div>
+          <span style={{ fontSize: "20px", color: "#FFFFFF", lineHeight: 1.5, flex: 1 }}>{props.subhead}</span>
+        </div>
+      </div>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <CTAButton text={props.cta} color={props.brandColors.primary} size="large" />
+      </div>
+    </div>
+  ),
+};
+
+// ============================================================
+// TEMPLATE 20: Risk Reversal / Guarantee
+// Money back guarantee, risk-free messaging
+// ============================================================
+const riskReversal: TemplateDefinition = {
+  id: "risk-reversal",
+  name: "Risk Reversal",
+  description: "Guarantee / risk-free / money-back messaging",
+  categories: ["product", "service", "digital"],
+  adCategories: ["conversion", "trust"],
+  render: (props) => (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: props.width, height: props.height, backgroundColor: props.brandColors.background, padding: "60px", gap: "24px" }}>
+      {/* Shield icon */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100px", height: "100px", borderRadius: "50%", backgroundColor: `${props.brandColors.primary}15`, border: `3px solid ${props.brandColors.primary}` }}>
+        <span style={{ fontSize: "48px" }}>🛡️</span>
+      </div>
+      <div style={{ display: "flex", fontSize: "44px", fontWeight: 900, color: props.brandColors.primary, textAlign: "center" as const, lineHeight: 1.1 }}>
+        {props.headline}
+      </div>
+      <div style={{ display: "flex", width: "60px", height: "3px", backgroundColor: props.brandColors.accent, borderRadius: "2px" }} />
+      <div style={{ display: "flex", fontSize: "20px", color: "#555", textAlign: "center" as const, lineHeight: 1.5, maxWidth: "85%" }}>
+        {props.subhead}
+      </div>
+      <CTAButton text={props.cta} color={props.brandColors.primary} size="large" />
+    </div>
+  ),
+};
+
+// ============================================================
+// TEMPLATE 21: Price Comparison
+// Show value vs competitor pricing
+// ============================================================
+const priceComparison: TemplateDefinition = {
+  id: "price-comparison",
+  name: "Price Comparison",
+  description: "Our price vs competitor — show the value gap",
+  categories: ["product", "service", "digital"],
+  adCategories: ["competitive", "conversion"],
+  render: (props) => {
+    const parts = props.subhead.split(/[|;]/).filter(Boolean);
+    const ourPrice = parts[0]?.trim() || "From $49";
+    const theirPrice = parts[1]?.trim() || "Up to $200";
+
+    return (
+      <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, backgroundColor: props.brandColors.background, padding: "48px", gap: "20px" }}>
+        <div style={{ display: "flex", fontSize: "34px", fontWeight: 800, color: props.brandColors.primary, textAlign: "center" as const, lineHeight: 1.2 }}>
+          {props.headline}
+        </div>
+        <div style={{ display: "flex", flex: 1, gap: "16px", alignItems: "stretch" }}>
+          {/* Competitor */}
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, backgroundColor: "#F5F5F5", borderRadius: "20px", padding: "28px", gap: "8px" }}>
+            <span style={{ fontSize: "13px", color: "#999", fontWeight: 700, letterSpacing: "1px", textTransform: "uppercase" as const }}>Others</span>
+            <span style={{ fontSize: "42px", fontWeight: 900, color: "#CC4444", textDecoration: "line-through" }}>{theirPrice}</span>
+          </div>
+          {/* Ours */}
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, backgroundColor: props.brandColors.primary, borderRadius: "20px", padding: "28px", gap: "8px" }}>
+            <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)", fontWeight: 700, letterSpacing: "1px", textTransform: "uppercase" as const }}>Us</span>
+            <span style={{ fontSize: "42px", fontWeight: 900, color: "#FFFFFF" }}>{ourPrice}</span>
+            <div style={{ display: "flex", padding: "4px 12px", backgroundColor: "rgba(255,255,255,0.2)", borderRadius: "20px" }}>
+              <span style={{ color: "#FFFFFF", fontSize: "12px", fontWeight: 700 }}>BEST VALUE</span>
+            </div>
+          </div>
+        </div>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <CTAButton text={props.cta} color={props.brandColors.primary} size="large" />
+        </div>
+      </div>
+    );
+  },
+};
+
+// ============================================================
+// TEMPLATE 22: Founder / Story
+// Personal narrative with human connection
+// ============================================================
+const founderStory: TemplateDefinition = {
+  id: "founder-story",
+  name: "Founder Story",
+  description: "Personal narrative — why this brand exists",
+  categories: ["product", "service", "personal_brand", "location"],
+  adCategories: ["emotional", "trust"],
+  render: (props) => (
+    <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, position: "relative", overflow: "hidden" }}>
+      {props.bgImageUrl && (
+        <img src={props.bgImageUrl} style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+      )}
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.85) 100%)" }} />
+      {/* Quote mark */}
+      <div style={{ display: "flex", position: "relative", padding: "40px 48px 0" }}>
+        <span style={{ fontSize: "96px", color: props.brandColors.primary, lineHeight: 0.8, fontWeight: 900, opacity: 0.8 }}>&ldquo;</span>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", position: "relative", flex: 1, justifyContent: "flex-end", padding: "0 48px 48px" }}>
+        <div style={{ display: "flex", fontSize: "28px", color: "#FFFFFF", lineHeight: 1.4, fontStyle: "italic", marginBottom: "20px" }}>
+          {props.headline}
+        </div>
+        <div style={{ display: "flex", fontSize: "16px", color: "rgba(255,255,255,0.75)", marginBottom: "20px", lineHeight: 1.4 }}>
+          {props.subhead}
+        </div>
+        <CTAButton text={props.cta} color={props.brandColors.primary} />
+      </div>
+    </div>
+  ),
+};
+
+// ============================================================
+// TEMPLATE 23: App / Digital Mockup
+// Screenshot in device frame with headline
+// ============================================================
+const appMockup: TemplateDefinition = {
+  id: "app-mockup",
+  name: "App Mockup",
+  description: "Screenshot or UI in a device frame with headline",
+  categories: ["digital"],
+  adCategories: ["conversion", "differentiator"],
+  render: (props) => (
+    <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, backgroundColor: props.brandColors.background, padding: "48px", gap: "24px", alignItems: "center" }}>
+      <div style={{ display: "flex", fontSize: "36px", fontWeight: 800, color: props.brandColors.primary, textAlign: "center" as const, lineHeight: 1.2 }}>
+        {props.headline}
+      </div>
+      {/* Device frame */}
+      <div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <div style={{ display: "flex", flexDirection: "column", width: "220px", borderRadius: "32px", border: `8px solid ${props.brandColors.primary}`, overflow: "hidden", backgroundColor: "#F0F0F0" }}>
+          {/* Status bar */}
+          <div style={{ display: "flex", backgroundColor: props.brandColors.primary, height: "28px", alignItems: "center", justifyContent: "center" }}>
+            <span style={{ color: "#FFF", fontSize: "10px", fontWeight: 700 }}>9:41</span>
+          </div>
+          {/* Screen content */}
+          <div style={{ display: "flex", flexDirection: "column", padding: "16px", gap: "8px", minHeight: "240px" }}>
+            {props.primaryAssetUrl ? (
+              <img src={props.primaryAssetUrl} style={{ width: "100%", height: "160px", objectFit: "cover", borderRadius: "8px" }} />
+            ) : (
+              <div style={{ display: "flex", height: "160px", backgroundColor: `${props.brandColors.primary}20`, borderRadius: "8px", alignItems: "center", justifyContent: "center", fontSize: "40px" }}>📱</div>
+            )}
+            <div style={{ display: "flex", height: "12px", backgroundColor: `${props.brandColors.primary}30`, borderRadius: "6px" }} />
+            <div style={{ display: "flex", height: "12px", backgroundColor: `${props.brandColors.primary}20`, borderRadius: "6px", width: "70%" }} />
+          </div>
+          {/* Home bar */}
+          <div style={{ display: "flex", backgroundColor: "#F0F0F0", height: "20px", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ display: "flex", width: "60px", height: "4px", backgroundColor: "#CCC", borderRadius: "2px" }} />
+          </div>
+        </div>
+      </div>
+      <div style={{ display: "flex", fontSize: "16px", color: "#666", textAlign: "center" as const }}>{props.subhead}</div>
+      <CTAButton text={props.cta} color={props.brandColors.primary} size="large" />
+    </div>
+  ),
+};
+
+// ============================================================
 // Export all templates
 // ============================================================
 export const TEMPLATES: TemplateDefinition[] = [
@@ -698,6 +1001,14 @@ export const TEMPLATES: TemplateDefinition[] = [
   socialProofWall,
   featureGrid,
   lifestyleBlend,
+  mythBuster,
+  checklist,
+  countdown,
+  faqObjection,
+  riskReversal,
+  priceComparison,
+  founderStory,
+  appMockup,
 ];
 
 export function getTemplateById(id: string): TemplateDefinition | undefined {

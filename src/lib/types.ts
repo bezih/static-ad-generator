@@ -84,6 +84,9 @@ export interface GeneratedAd {
   bgImageUrl?: string;
   primaryAssetUrl?: string;
   format: string;
+  qualityScore?: number; // 1-10 from Claude Vision quality gate
+  qualityPass?: boolean;
+  qualityIssues?: string[];
 }
 
 export interface SavedCampaign {
