@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { AnimatePresence } from "framer-motion";
 import { Nav } from "@/components/Nav";
-import { StepBrandSetup } from "@/components/generate/StepBrandSetup";
+import { StepBrandSetup, UploadedAsset } from "@/components/generate/StepBrandSetup";
 import { StepDnaReview } from "@/components/generate/StepDnaReview";
 import { StepResearch } from "@/components/generate/StepResearch";
 import { StepBriefs } from "@/components/generate/StepBriefs";
@@ -25,6 +25,7 @@ export default function GeneratePage() {
   const [brandUrl, setBrandUrl] = useState("");
   const [product, setProduct] = useState("");
   const [businessType, setBusinessType] = useState<BusinessType>("service");
+  const [uploadedAssets, setUploadedAssets] = useState<UploadedAsset[]>([]);
 
   // Step 2: Brand DNA
   const [brandDna, setBrandDna] = useState<BrandDna | null>(null);
@@ -99,13 +100,32 @@ export default function GeneratePage() {
       if (data.error) throw new Error(data.error);
 
       setBrandDna(data.brandDna);
-      setProductImages(data.productImages || []);
-      if (data.logoUrl) setLogoUrl(data.logoUrl);
+
+      // Merge scraped images with user-uploaded assets
+      const scrapedImages = data.productImages || [];
+      const uploadedImageUrls = uploadedAssets.map((a) => a.url);
+      const allImages = [...uploadedImageUrls, ...scrapedImages];
+      setProductImages(allImages);
+
+      // Use uploaded logo if available, otherwise scraped logo
+      const uploadedLogo = uploadedAssets.find((a) => a.type === "logo");
+      if (uploadedLogo) setLogoUrl(uploadedLogo.url);
+      else if (data.logoUrl) setLogoUrl(data.logoUrl);
+
       if (data.businessType) setBusinessType(data.businessType);
 
-      // Process assets in parallel
-      if (data.productImages?.length > 0) {
-        processAssets(data.productImages, data.businessType || businessType);
+      // Merge uploaded asset classifications with scraped ones
+      const uploadedClassified: ClassifiedAsset[] = uploadedAssets.map((a) => ({
+        url: a.url,
+        type: a.type as ClassifiedAsset["type"],
+        usability: 9, // user-uploaded assets are high quality by default
+      }));
+
+      // Process scraped assets in parallel, then merge
+      if (allImages.length > 0) {
+        processAssets(scrapedImages, data.businessType || businessType, uploadedClassified);
+      } else if (uploadedClassified.length > 0) {
+        setClassifiedAssets(uploadedClassified);
       }
 
       setStep("review");
@@ -116,7 +136,7 @@ export default function GeneratePage() {
   };
 
   // Process and classify assets
-  const processAssets = async (images: string[], bType: string) => {
+  const processAssets = async (images: string[], bType: string, preclassified: ClassifiedAsset[] = []) => {
     try {
       const res = await fetch("/api/process-assets", {
         method: "POST",
@@ -124,9 +144,14 @@ export default function GeneratePage() {
         body: JSON.stringify({ imageUrls: images, brandName, businessType: bType }),
       });
       const data = await res.json();
-      if (data.assets) setClassifiedAssets(data.assets);
+      const scrapedAssets = data.assets || [];
+      // Merge: user uploads first (higher priority), then scraped
+      setClassifiedAssets([...preclassified, ...scrapedAssets]);
       if (data.processedAssets) setProcessedAssets(data.processedAssets);
-    } catch {}
+    } catch {
+      // If processing fails, still keep pre-classified uploads
+      if (preclassified.length > 0) setClassifiedAssets(preclassified);
+    }
   };
 
   // ── Step 2 → 3: Confirm DNA, start research ──
@@ -423,6 +448,7 @@ export default function GeneratePage() {
     setBrandUrl("");
     setProduct("");
     setBusinessType("service");
+    setUploadedAssets([]);
     setBrandDna(null);
     setProductImages([]);
     setLogoUrl(null);
@@ -497,6 +523,7 @@ export default function GeneratePage() {
                 brandUrl={brandUrl} setBrandUrl={setBrandUrl}
                 product={product} setProduct={setProduct}
                 businessType={businessType} setBusinessType={setBusinessType}
+                uploadedAssets={uploadedAssets} setUploadedAssets={setUploadedAssets}
                 onStart={startScrape}
                 savedCampaigns={savedCampaigns}
                 onLoadCampaign={(c) => { setBrandName(c.brandName); setGenerated(c.ads); setStep("done"); }}
