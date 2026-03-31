@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
           ? { width: 1080, height: 1080 }
           : { width: 1200, height: 628 },
         output_format: "png",
-        safety_tolerance: 4,
+        safety_tolerance: "4",
       },
     });
 

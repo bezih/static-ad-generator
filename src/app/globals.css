@@ -19,8 +19,8 @@
   --color-sapphire: #2D5A8B;
   --color-background: #0A0A0B;
   --color-foreground: #F0EDE8;
-  --font-display: var(--font-playfair);
-  --font-body: var(--font-dm-sans);
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-body: "DM Sans", system-ui, -apple-system, sans-serif;
 }
 
 html {

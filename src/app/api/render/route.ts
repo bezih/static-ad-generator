@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import satori from "satori";
-import { Resvg } from "@resvg/resvg-js";
+import { ImageResponse } from "next/og";
 import { getTemplateById, AD_FORMATS, AdFormat } from "@/lib/templates";
-import React from "react";
 
 // Load fonts once at module level
 let fontDataCache: { inter: ArrayBuffer; interBold: ArrayBuffer } | null = null;
@@ -11,8 +9,8 @@ async function loadFonts() {
   if (fontDataCache) return fontDataCache;
 
   const [inter, interBold] = await Promise.all([
-    fetch("https://fonts.cdnfonts.com/s/19795/Inter-Regular.woff").then((r) => r.arrayBuffer()),
-    fetch("https://fonts.cdnfonts.com/s/19795/Inter-Bold.woff").then((r) => r.arrayBuffer()),
+    fetch("https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-400-normal.woff").then((r) => r.arrayBuffer()),
+    fetch("https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-700-normal.woff").then((r) => r.arrayBuffer()),
   ]);
 
   fontDataCache = { inter, interBold };
@@ -65,8 +63,8 @@ export async function POST(request: NextRequest) {
     // Load fonts
     const fonts = await loadFonts();
 
-    // Render JSX → SVG via Satori
-    const svg = await satori(element as React.ReactNode, {
+    // Render to PNG using next/og ImageResponse (uses Satori + resvg-wasm internally)
+    const imageResponse = new ImageResponse(element, {
       width: formatSpec.width,
       height: formatSpec.height,
       fonts: [
@@ -85,14 +83,10 @@ export async function POST(request: NextRequest) {
       ],
     });
 
-    // SVG → PNG via resvg
-    const resvg = new Resvg(svg, {
-      fitTo: { mode: "width", value: formatSpec.width },
-    });
-    const pngData = resvg.render();
-    const pngBuffer = pngData.asPng();
+    // Convert ImageResponse to a standard NextResponse with proper headers
+    const buffer = await imageResponse.arrayBuffer();
 
-    return new NextResponse(pngBuffer, {
+    return new NextResponse(buffer, {
       headers: {
         "Content-Type": "image/png",
         "Content-Disposition": `inline; filename="${templateId}-${format}.png"`,
