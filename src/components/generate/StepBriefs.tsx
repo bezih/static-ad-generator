@@ -5,6 +5,33 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CreativeBrief } from "@/lib/types";
 import { TEMPLATES, AD_FORMATS, AdFormat } from "@/lib/templates";
 
+// Mini layout icons for template previews
+const templateIcons: Record<string, string> = {
+  "hero-headline": "▓▓▓\n▓▓▓\n███",
+  "bold-statement": "━━━\nTXT\n━━━",
+  "stat-callout": "###\ntxt\n━━━",
+  "split-compare": "▌ ▐",
+  "testimonial-card": "★★★\n\" \"\ntxt",
+  "problem-solution": "✗✗✗\n───\n✓✓✓",
+  "three-step": "①②③",
+  "trust-authority": "▓▓▓\n███",
+  "facility-showcase": "▓▓▓\ntxt▓",
+  "product-spotlight": "txt\n[■]\ntxt",
+  "ugc-style": "▓▓▓\ntxt▓",
+  "offer-banner": "!!!\nTXT\n[→]",
+  "social-proof-wall": "★★★\n───\n───",
+  "feature-grid": "■ ■\n■ ■",
+  "lifestyle-blend": "▓▓▓\ntxt▓",
+  "myth-buster": "✗✗✗\n───\n✓✓✓",
+  "checklist": "☑☑☑\n☑☑☑",
+  "countdown": "!!!\n⏱⏱\n[→]",
+  "faq-objection": "Q?\n───\nA!",
+  "risk-reversal": "◉\nTXT\n━━━",
+  "price-comparison": "$$ $$\nvs",
+  "founder-story": "\" \"\ntxt▓",
+  "app-mockup": "txt\n[📱]\ntxt",
+};
+
 interface Props {
   briefs: CreativeBrief[];
   selectedBriefs: number[];
@@ -99,6 +126,12 @@ export function StepBriefs({
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                     )}
+                  </div>
+                  {/* Mini layout preview */}
+                  <div className="w-10 h-12 rounded-md bg-obsidian border border-ash/50 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                    <span className="text-[7px] text-gold/60 leading-none whitespace-pre text-center font-mono">
+                      {templateIcons[brief.templateId] || "▓▓▓"}
+                    </span>
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
