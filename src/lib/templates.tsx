@@ -737,21 +737,23 @@ const mythBuster: TemplateDefinition = {
     const truth = parts[1]?.trim() || props.subhead;
 
     return (
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: props.width, height: props.height, backgroundColor: props.brandColors.background, padding: "72px", gap: "28px" }}>
-        <div style={{ display: "flex", fontSize: "22px", fontWeight: 700, color: "#CC4444", letterSpacing: "3px", textTransform: "uppercase" as const }}>MYTH</div>
-        <div style={{ display: "flex", fontSize: "44px", fontWeight: 700, color: "#999", textDecoration: "line-through", textAlign: "center" as const, lineHeight: 1.3 }}>
-          {myth}
+      <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height }}>
+        {/* Myth — dark red tinted block */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, backgroundColor: "#1a0000", padding: "72px", gap: "16px" }}>
+          <div style={{ display: "flex", fontSize: "24px", fontWeight: 800, color: "#FF4444", letterSpacing: "6px", textTransform: "uppercase" as const }}>MYTH</div>
+          <div style={{ display: "flex", fontSize: "52px", fontWeight: 800, color: "#FF6B6B", textDecoration: "line-through", textAlign: "center" as const, lineHeight: 1.2 }}>
+            {myth}
+          </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
-          <div style={{ display: "flex", flex: 1, height: "1px", backgroundColor: "#E0E0E0" }} />
-          <div style={{ display: "flex", fontSize: "34px" }}>⚡</div>
-          <div style={{ display: "flex", flex: 1, height: "1px", backgroundColor: "#E0E0E0" }} />
+        <AccentStripe color={props.brandColors.primary} height="10px" />
+        {/* Truth — brand color block */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, backgroundColor: props.brandColors.primary, padding: "72px", gap: "16px" }}>
+          <div style={{ display: "flex", fontSize: "24px", fontWeight: 800, color: "rgba(255,255,255,0.7)", letterSpacing: "6px", textTransform: "uppercase" as const }}>REALITY</div>
+          <div style={{ display: "flex", fontSize: "56px", fontWeight: 900, color: "#FFFFFF", textAlign: "center" as const, lineHeight: 1.15 }}>
+            {truth}
+          </div>
         </div>
-        <div style={{ display: "flex", fontSize: "22px", fontWeight: 700, color: props.brandColors.primary, letterSpacing: "3px", textTransform: "uppercase" as const }}>REALITY</div>
-        <div style={{ display: "flex", fontSize: "50px", fontWeight: 800, color: props.brandColors.primary, textAlign: "center" as const, lineHeight: 1.2 }}>
-          {truth}
-        </div>
-        <CTAButton text={props.cta} color={props.brandColors.primary} size="large" />
+        <CTABar cta={props.cta} color="#111" textColor="#FFFFFF" />
       </div>
     );
   },
@@ -772,22 +774,25 @@ const checklist: TemplateDefinition = {
     const listItems = items.length >= 3 ? items : ["Benefit one", "Benefit two", "Benefit three", "Benefit four"];
 
     return (
-      <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, backgroundColor: props.brandColors.background, padding: "72px", gap: "28px" }}>
-        <div style={{ display: "flex", fontSize: "24px", fontWeight: 700, color: props.brandColors.primary, letterSpacing: "2px", textTransform: "uppercase" as const }}>EVERYTHING INCLUDED</div>
-        <div style={{ display: "flex", fontSize: "54px", fontWeight: 800, color: props.brandColors.primary, lineHeight: 1.15 }}>
-          {props.headline}
+      <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, backgroundColor: "#0D0D0D" }}>
+        <AccentStripe color={props.brandColors.primary} height="10px" />
+        <div style={{ display: "flex", flexDirection: "column", padding: "56px 72px 0", gap: "12px" }}>
+          <div style={{ display: "flex", fontSize: "22px", fontWeight: 800, color: props.brandColors.primary, letterSpacing: "4px", textTransform: "uppercase" as const }}>WHAT YOU GET</div>
+          <div style={{ display: "flex", fontSize: "56px", fontWeight: 900, color: "#FFFFFF", lineHeight: 1.1 }}>
+            {props.headline}
+          </div>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", flex: 1, justifyContent: "center", gap: "24px" }}>
+        <div style={{ display: "flex", flexDirection: "column", flex: 1, justifyContent: "center", padding: "24px 72px", gap: "28px" }}>
           {listItems.map((item, i) => (
             <div key={i} style={{ display: "flex", alignItems: "center", gap: "24px" }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "28px", height: "28px", borderRadius: "50%", backgroundColor: props.brandColors.primary, flexShrink: 0 }}>
-                <span style={{ color: "#FFFFFF", fontSize: "22px", fontWeight: 800 }}>✓</span>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "48px", height: "48px", borderRadius: "50%", backgroundColor: props.brandColors.primary, flexShrink: 0 }}>
+                <span style={{ color: "#FFFFFF", fontSize: "26px", fontWeight: 900 }}>✓</span>
               </div>
-              <span style={{ fontSize: "28px", color: "#333", fontWeight: 500 }}>{item.trim()}</span>
+              <span style={{ fontSize: "30px", color: "rgba(255,255,255,0.9)", fontWeight: 600 }}>{item.trim()}</span>
             </div>
           ))}
         </div>
-        <CTAButton text={props.cta} color={props.brandColors.primary} size="large" />
+        <CTABar cta={props.cta} color={props.brandColors.primary} textColor={props.brandColors.primary} />
       </div>
     );
   },
@@ -804,12 +809,10 @@ const countdown: TemplateDefinition = {
   categories: ["product", "service", "location", "digital"],
   adCategories: ["conversion"],
   render: (props) => (
-    <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, backgroundColor: "#1A1A1A", padding: "0" }}>
-      {/* Top urgency bar */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "16px", backgroundColor: "#CC2222", gap: "8px" }}>
-        <span style={{ fontSize: "32px" }}>🔥</span>
-        <span style={{ color: "#FFFFFF", fontSize: "22px", fontWeight: 800, letterSpacing: "2px", textTransform: "uppercase" as const }}>LIMITED TIME OFFER</span>
-        <span style={{ fontSize: "32px" }}>🔥</span>
+    <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, backgroundColor: "#0D0D0D" }}>
+      {/* Red urgency bar */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "24px", backgroundColor: "#CC2222" }}>
+        <span style={{ color: "#FFFFFF", fontSize: "24px", fontWeight: 900, letterSpacing: "6px", textTransform: "uppercase" as const }}>OFFER ENDS SOON</span>
       </div>
       {/* Main content */}
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, padding: "72px", gap: "32px" }}>
@@ -819,22 +822,15 @@ const countdown: TemplateDefinition = {
         <div style={{ display: "flex", fontSize: "32px", color: "rgba(255,255,255,0.75)", textAlign: "center" as const, lineHeight: 1.4 }}>
           {props.subhead}
         </div>
-        <div style={{ display: "flex", gap: "20px", marginTop: "8px" }}>
-          {["Hours", "Minutes", "Seconds"].map((unit, i) => (
-            <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "4px" }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "72px", height: "72px", backgroundColor: props.brandColors.primary, borderRadius: "12px" }}>
-                <span style={{ color: "#FFFFFF", fontSize: "42px", fontWeight: 900 }}>
-                  {i === 0 ? "24" : i === 1 ? "00" : "00"}
-                </span>
-              </div>
-              <span style={{ color: "rgba(255,255,255,0.5)", fontSize: "11px", textTransform: "uppercase" as const, letterSpacing: "1px" }}>{unit}</span>
+        <div style={{ display: "flex", gap: "16px" }}>
+          {["24", "00", "00"].map((val, i) => (
+            <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100px", height: "100px", backgroundColor: props.brandColors.primary, borderRadius: "16px" }}>
+              <span style={{ color: "#FFFFFF", fontSize: "52px", fontWeight: 900 }}>{val}</span>
             </div>
           ))}
         </div>
       </div>
-      <div style={{ display: "flex", justifyContent: "center", padding: "44px" }}>
-        <CTAButton text={props.cta} color={props.brandColors.primary} size="large" />
-      </div>
+      <CTABar cta={props.cta} color="#CC2222" textColor="#CC2222" />
     </div>
   ),
 };
@@ -850,28 +846,23 @@ const faqObjection: TemplateDefinition = {
   categories: ["product", "service", "digital", "location", "personal_brand"],
   adCategories: ["conversion", "trust"],
   render: (props) => (
-    <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, backgroundColor: props.brandColors.background, padding: "72px", gap: "32px" }}>
-      {/* Q */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "20px", padding: "40px", backgroundColor: "rgba(0,0,0,0.04)", borderRadius: "20px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "36px", height: "36px", borderRadius: "50%", backgroundColor: "#E0E0E0", flexShrink: 0 }}>
-            <span style={{ color: "#555", fontSize: "28px", fontWeight: 800 }}>Q</span>
-          </div>
-          <span style={{ fontSize: "32px", fontWeight: 700, color: "#333" }}>{props.headline}</span>
+    <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, backgroundColor: "#0D0D0D" }}>
+      <AccentStripe color={props.brandColors.primary} height="10px" />
+      {/* Q block */}
+      <div style={{ display: "flex", alignItems: "center", gap: "24px", padding: "56px 72px", backgroundColor: "#1a1a1a" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "64px", height: "64px", borderRadius: "50%", backgroundColor: "#333", flexShrink: 0 }}>
+          <span style={{ color: "#FFF", fontSize: "32px", fontWeight: 900 }}>Q</span>
         </div>
+        <span style={{ fontSize: "36px", fontWeight: 700, color: "#FFFFFF", lineHeight: 1.3 }}>{props.headline}</span>
       </div>
-      {/* A */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "20px", padding: "40px", backgroundColor: props.brandColors.primary, borderRadius: "20px", flex: 1 }}>
-        <div style={{ display: "flex", alignItems: "flex-start", gap: "20px" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "36px", height: "36px", borderRadius: "50%", backgroundColor: "rgba(255,255,255,0.25)", flexShrink: 0 }}>
-            <span style={{ color: "#FFFFFF", fontSize: "28px", fontWeight: 800 }}>A</span>
-          </div>
-          <span style={{ fontSize: "32px", color: "#FFFFFF", lineHeight: 1.5, flex: 1 }}>{props.subhead}</span>
+      {/* A block */}
+      <div style={{ display: "flex", alignItems: "flex-start", gap: "24px", flex: 1, padding: "56px 72px", backgroundColor: props.brandColors.primary }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "64px", height: "64px", borderRadius: "50%", backgroundColor: "rgba(255,255,255,0.2)", flexShrink: 0 }}>
+          <span style={{ color: "#FFFFFF", fontSize: "32px", fontWeight: 900 }}>A</span>
         </div>
+        <span style={{ fontSize: "34px", color: "#FFFFFF", lineHeight: 1.45, flex: 1 }}>{props.subhead}</span>
       </div>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <CTAButton text={props.cta} color={props.brandColors.primary} size="large" />
-      </div>
+      <CTABar cta={props.cta} color="#111" textColor="#FFFFFF" />
     </div>
   ),
 };
@@ -887,19 +878,22 @@ const riskReversal: TemplateDefinition = {
   categories: ["product", "service", "digital"],
   adCategories: ["conversion", "trust"],
   render: (props) => (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: props.width, height: props.height, backgroundColor: props.brandColors.background, padding: "72px", gap: "32px" }}>
-      {/* Shield icon */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100px", height: "100px", borderRadius: "50%", backgroundColor: `${props.brandColors.primary}15`, border: `3px solid ${props.brandColors.primary}` }}>
-        <span style={{ fontSize: "68px" }}>🛡️</span>
+    <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, backgroundColor: "#0D0D0D" }}>
+      <AccentStripe color={props.brandColors.primary} height="10px" />
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, padding: "72px", gap: "36px" }}>
+        {/* Guarantee circle — no emoji */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "140px", height: "140px", borderRadius: "50%", border: `6px solid ${props.brandColors.primary}`, backgroundColor: "#1a1a1a" }}>
+          <span style={{ color: props.brandColors.primary, fontSize: "56px", fontWeight: 900 }}>100%</span>
+        </div>
+        <div style={{ display: "flex", fontSize: "68px", fontWeight: 900, color: "#FFFFFF", textAlign: "center" as const, lineHeight: 1.05 }}>
+          {props.headline}
+        </div>
+        <div style={{ display: "flex", width: "120px", height: "6px", backgroundColor: props.brandColors.primary, borderRadius: "3px" }} />
+        <div style={{ display: "flex", fontSize: "28px", color: "rgba(255,255,255,0.7)", textAlign: "center" as const, lineHeight: 1.5, maxWidth: "85%" }}>
+          {props.subhead}
+        </div>
       </div>
-      <div style={{ display: "flex", fontSize: "64px", fontWeight: 900, color: props.brandColors.primary, textAlign: "center" as const, lineHeight: 1.1 }}>
-        {props.headline}
-      </div>
-      <div style={{ display: "flex", width: "100px", height: "5px", backgroundColor: props.brandColors.accent, borderRadius: "2px" }} />
-      <div style={{ display: "flex", fontSize: "32px", color: "#555", textAlign: "center" as const, lineHeight: 1.5, maxWidth: "85%" }}>
-        {props.subhead}
-      </div>
-      <CTAButton text={props.cta} color={props.brandColors.primary} size="large" />
+      <CTABar cta={props.cta} color={props.brandColors.primary} textColor={props.brandColors.primary} />
     </div>
   ),
 };
@@ -920,28 +914,27 @@ const priceComparison: TemplateDefinition = {
     const theirPrice = parts[1]?.trim() || "Up to $200";
 
     return (
-      <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, backgroundColor: props.brandColors.background, padding: "72px", gap: "28px" }}>
-        <div style={{ display: "flex", fontSize: "50px", fontWeight: 800, color: props.brandColors.primary, textAlign: "center" as const, lineHeight: 1.2 }}>
+      <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, backgroundColor: "#0D0D0D" }}>
+        <AccentStripe color={props.brandColors.primary} height="10px" />
+        <div style={{ display: "flex", fontSize: "52px", fontWeight: 900, color: "#FFFFFF", textAlign: "center" as const, lineHeight: 1.15, padding: "56px 72px 0" }}>
           {props.headline}
         </div>
-        <div style={{ display: "flex", flex: 1, gap: "24px", alignItems: "stretch" }}>
+        <div style={{ display: "flex", flex: 1, gap: "16px", padding: "32px 72px", alignItems: "stretch" }}>
           {/* Competitor */}
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, backgroundColor: "#F5F5F5", borderRadius: "20px", padding: "40px", gap: "8px" }}>
-            <span style={{ fontSize: "13px", color: "#999", fontWeight: 700, letterSpacing: "1px", textTransform: "uppercase" as const }}>Others</span>
-            <span style={{ fontSize: "60px", fontWeight: 900, color: "#CC4444", textDecoration: "line-through" }}>{theirPrice}</span>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, backgroundColor: "#1a1a1a", borderRadius: "24px", padding: "40px", gap: "12px", border: "2px solid #333" }}>
+            <span style={{ fontSize: "22px", color: "#888", fontWeight: 800, letterSpacing: "3px", textTransform: "uppercase" as const }}>OTHERS</span>
+            <span style={{ fontSize: "72px", fontWeight: 900, color: "#FF4444", textDecoration: "line-through" }}>{theirPrice}</span>
           </div>
           {/* Ours */}
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, backgroundColor: props.brandColors.primary, borderRadius: "20px", padding: "40px", gap: "8px" }}>
-            <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)", fontWeight: 700, letterSpacing: "1px", textTransform: "uppercase" as const }}>Us</span>
-            <span style={{ fontSize: "60px", fontWeight: 900, color: "#FFFFFF" }}>{ourPrice}</span>
-            <div style={{ display: "flex", padding: "4px 12px", backgroundColor: "rgba(255,255,255,0.2)", borderRadius: "20px" }}>
-              <span style={{ color: "#FFFFFF", fontSize: "12px", fontWeight: 700 }}>BEST VALUE</span>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, backgroundColor: props.brandColors.primary, borderRadius: "24px", padding: "40px", gap: "12px" }}>
+            <span style={{ fontSize: "22px", color: "rgba(255,255,255,0.7)", fontWeight: 800, letterSpacing: "3px", textTransform: "uppercase" as const }}>US</span>
+            <span style={{ fontSize: "72px", fontWeight: 900, color: "#FFFFFF" }}>{ourPrice}</span>
+            <div style={{ display: "flex", padding: "8px 24px", backgroundColor: "rgba(255,255,255,0.2)", borderRadius: "24px" }}>
+              <span style={{ color: "#FFFFFF", fontSize: "18px", fontWeight: 800, letterSpacing: "2px" }}>BEST VALUE</span>
             </div>
           </div>
         </div>
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <CTAButton text={props.cta} color={props.brandColors.primary} size="large" />
-        </div>
+        <CTABar cta={props.cta} color={props.brandColors.primary} textColor={props.brandColors.primary} />
       </div>
     );
   },
@@ -962,20 +955,20 @@ const founderStory: TemplateDefinition = {
       {props.bgImageUrl && (
         <img src={props.bgImageUrl} style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", objectFit: "cover" }} />
       )}
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.85) 100%)" }} />
-      {/* Quote mark */}
-      <div style={{ display: "flex", position: "relative", padding: "40px 48px 0" }}>
-        <span style={{ fontSize: "120px", color: props.brandColors.primary, lineHeight: 0.8, fontWeight: 900, opacity: 0.8 }}>&ldquo;</span>
+      <Overlay opacity={0.8} direction="full" />
+      {/* Big quote mark */}
+      <div style={{ display: "flex", position: "relative", padding: "64px 72px 0" }}>
+        <span style={{ fontSize: "160px", color: props.brandColors.primary, lineHeight: 0.7, fontWeight: 900 }}>&ldquo;</span>
       </div>
-      <div style={{ display: "flex", flexDirection: "column", position: "relative", flex: 1, justifyContent: "flex-end", padding: "0 48px 48px" }}>
-        <div style={{ display: "flex", fontSize: "42px", color: "#FFFFFF", lineHeight: 1.4, fontStyle: "italic", marginBottom: "20px" }}>
+      <div style={{ display: "flex", flexDirection: "column", position: "relative", flex: 1, justifyContent: "center", padding: "0 72px" }}>
+        <div style={{ display: "flex", fontSize: "48px", color: "#FFFFFF", lineHeight: 1.35, fontStyle: "italic" }}>
           {props.headline}
         </div>
-        <div style={{ display: "flex", fontSize: "24px", color: "rgba(255,255,255,0.75)", marginBottom: "20px", lineHeight: 1.4 }}>
+        <div style={{ display: "flex", fontSize: "24px", color: "rgba(255,255,255,0.6)", marginTop: "24px", letterSpacing: "2px", textTransform: "uppercase" as const }}>
           {props.subhead}
         </div>
-        <CTAButton text={props.cta} color={props.brandColors.primary} />
       </div>
+      <CTABar cta={props.cta} color={props.brandColors.primary} textColor={props.brandColors.primary} />
     </div>
   ),
 };
@@ -991,35 +984,35 @@ const appMockup: TemplateDefinition = {
   categories: ["digital"],
   adCategories: ["conversion", "differentiator"],
   render: (props) => (
-    <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, backgroundColor: props.brandColors.background, padding: "72px", gap: "32px", alignItems: "center" }}>
-      <div style={{ display: "flex", fontSize: "52px", fontWeight: 800, color: props.brandColors.primary, textAlign: "center" as const, lineHeight: 1.2 }}>
+    <div style={{ display: "flex", flexDirection: "column", width: props.width, height: props.height, backgroundColor: "#0D0D0D" }}>
+      <AccentStripe color={props.brandColors.primary} height="10px" />
+      <div style={{ display: "flex", fontSize: "56px", fontWeight: 900, color: "#FFFFFF", textAlign: "center" as const, lineHeight: 1.1, padding: "56px 72px 0" }}>
         {props.headline}
       </div>
       {/* Device frame */}
       <div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <div style={{ display: "flex", flexDirection: "column", width: "220px", borderRadius: "32px", border: `8px solid ${props.brandColors.primary}`, overflow: "hidden", backgroundColor: "#F0F0F0" }}>
-          {/* Status bar */}
-          <div style={{ display: "flex", backgroundColor: props.brandColors.primary, height: "28px", alignItems: "center", justifyContent: "center" }}>
-            <span style={{ color: "#FFF", fontSize: "10px", fontWeight: 700 }}>9:41</span>
+        <div style={{ display: "flex", flexDirection: "column", width: "300px", borderRadius: "40px", border: `8px solid ${props.brandColors.primary}`, overflow: "hidden", backgroundColor: "#1a1a1a" }}>
+          <div style={{ display: "flex", backgroundColor: props.brandColors.primary, height: "36px", alignItems: "center", justifyContent: "center" }}>
+            <span style={{ color: "#FFF", fontSize: "16px", fontWeight: 700 }}>9:41</span>
           </div>
-          {/* Screen content */}
-          <div style={{ display: "flex", flexDirection: "column", padding: "16px", gap: "8px", minHeight: "240px" }}>
+          <div style={{ display: "flex", flexDirection: "column", padding: "20px", gap: "12px", minHeight: "320px" }}>
             {props.primaryAssetUrl ? (
-              <img src={props.primaryAssetUrl} style={{ width: "100%", height: "160px", objectFit: "cover", borderRadius: "8px" }} />
+              <img src={props.primaryAssetUrl} style={{ width: "100%", height: "220px", objectFit: "cover", borderRadius: "12px" }} />
             ) : (
-              <div style={{ display: "flex", height: "160px", backgroundColor: `${props.brandColors.primary}20`, borderRadius: "8px", alignItems: "center", justifyContent: "center", fontSize: "58px" }}>📱</div>
+              <div style={{ display: "flex", height: "220px", backgroundColor: `${props.brandColors.primary}20`, borderRadius: "12px", alignItems: "center", justifyContent: "center" }}>
+                <span style={{ color: props.brandColors.primary, fontSize: "32px", fontWeight: 700 }}>YOUR APP</span>
+              </div>
             )}
-            <div style={{ display: "flex", height: "12px", backgroundColor: `${props.brandColors.primary}30`, borderRadius: "6px" }} />
-            <div style={{ display: "flex", height: "12px", backgroundColor: `${props.brandColors.primary}20`, borderRadius: "6px", width: "70%" }} />
+            <div style={{ display: "flex", height: "16px", backgroundColor: "#333", borderRadius: "8px" }} />
+            <div style={{ display: "flex", height: "16px", backgroundColor: "#2a2a2a", borderRadius: "8px", width: "70%" }} />
           </div>
-          {/* Home bar */}
-          <div style={{ display: "flex", backgroundColor: "#F0F0F0", height: "20px", alignItems: "center", justifyContent: "center" }}>
-            <div style={{ display: "flex", width: "60px", height: "4px", backgroundColor: "#CCC", borderRadius: "2px" }} />
+          <div style={{ display: "flex", height: "24px", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ display: "flex", width: "80px", height: "5px", backgroundColor: "#444", borderRadius: "3px" }} />
           </div>
         </div>
       </div>
-      <div style={{ display: "flex", fontSize: "24px", color: "#666", textAlign: "center" as const }}>{props.subhead}</div>
-      <CTAButton text={props.cta} color={props.brandColors.primary} size="large" />
+      <div style={{ display: "flex", fontSize: "24px", color: "rgba(255,255,255,0.6)", textAlign: "center" as const, padding: "0 72px 16px", justifyContent: "center" }}>{props.subhead}</div>
+      <CTABar cta={props.cta} color={props.brandColors.primary} textColor={props.brandColors.primary} />
     </div>
   ),
 };
